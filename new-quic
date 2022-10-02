@@ -1,0 +1,64 @@
+#!/bin/sh
+
+add_bin_to_path() {
+  if [ -d /opt/quictls/lib64 ]; then
+    QUICTLS_LIB=/opt/quictls/lib64
+  else
+    QUICTLS_LIB=/opt/quictls/lib
+  fi
+  rm -f /usr/local/bin/qssl
+  cat << EOF > /usr/local/bin/qssl
+#!/bin/sh
+export LD_LIBRARY_PATH=${QUICTLS_LIB}
+/opt/quictls/bin/openssl \$*
+EOF
+  chmod +x /usr/local/bin/qssl
+}
+
+do_git_update() {
+  git checkout `git remote show origin | grep 'HEAD branch' | cut -d' ' -f5`
+  git pull --rebase
+}
+
+CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
+
+if [ "$(uname -i)" = "x86_64" ]; then
+        CONFARGS="${CONFARGS} enable-ec_nistp_64_gcc_128"
+fi
+
+if [ -z "$1" ]; then
+  err "Command needs an argument, the directory with quictls source"
+  exit 1
+fi
+
+DIR=`dirname $0`/$1
+if [ -e "$DIR" ]; then
+  if [ -d "$DIR" ]; then
+    cd $DIR
+    do_git_update
+    make distclean
+    ./config ${CONFARGS}
+    rm -rf /opt/old.quictls
+    mv /opt/quictls /opt/old.quictls
+    make -j 6
+    RETVAL="$?"
+    if [ "$RETVAL" -eq 0 ]; then
+      make install
+      RETVAL="$?"
+      if [ "$RETVAL" -eq 0 ]; then
+        add_bin_to_path
+	rm -rf /opt/quictls/ssl/certs
+        ln -s /etc/ssl/certs /opt/quictls/ssl/certs
+        make distclean
+      else
+        echo Install failed\!
+      fi
+    else
+      echo Build failed\! skipping install\!
+    fi
+  else
+    echo location \($DIR\) is not a directory.
+  fi
+else
+  echo location \($DIR\) does not exist.
+fi

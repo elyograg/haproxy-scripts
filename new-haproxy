@@ -1,0 +1,58 @@
+#!/bin/sh
+
+err() {
+  echo "E: $*" >>/dev/stderr
+}
+
+if [ -d /opt/quictls/lib64 ]; then
+  QUICTLS_LIB=/opt/quictls/lib64
+else
+  QUICTLS_LIB=/opt/quictls/lib
+fi
+
+if [ -z "$1" ]; then
+  err "Command needs an argument, the directory with haproxy source"
+  exit 1
+fi
+
+DIR=`dirname $0`/$1
+
+if [ -e "$DIR" ]; then
+  if [ -d "$DIR" ]; then
+    cd $1
+    git pull --rebase
+    make clean &&
+    make -j4 TARGET=linux-glibc \
+      USE_PCRE2_JIT=1 \
+      USE_OPENSSL=1 \
+      USE_ZLIB=1 \
+      USE_SYSTEMD=1 \
+      CPU=native \
+      USE_QUIC=1 \
+      SSL_INC=/opt/quictls/include \
+      SSL_LIB=$QUICTLS_LIB \
+      LDFLAGS="-Wl,-rpath,$QUICTLS_LIB" \
+      DEBUG=" " \
+
+# blank line above is intentional.
+#      DEBUG="-DDEBUG_H3 -DDEBUG_QPACK" \
+    RETVAL="$?"
+    if [ "$RETVAL" -eq 0 ]; then
+      make install
+      RETVAL="$?"
+      if [ "$RETVAL" -ne 0 ]; then
+        err "Install failed!"
+	exit 1
+      fi
+      make clean
+      service haproxy restart
+      echo "haproxy restarted!"
+    else
+      err "Build failed! skipping install!"
+    fi
+  else
+    err "location ($DIR) is not a directory."
+  fi
+else
+  err "location ($DIR) does not exist."
+fi

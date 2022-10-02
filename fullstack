@@ -1,0 +1,5 @@
+#!/bin/sh
+
+./new-quic git-quictls
+./new-haproxy git-haproxy-master
+

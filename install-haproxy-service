@@ -1,0 +1,21 @@
+#!/bin/sh
+
+err() {
+  echo "E: $*" >>/dev/stderr
+}
+
+DIR=`dirname $0`/$1/admin/systemd
+if [ -e "$DIR" ]; then
+  if [ -d "$DIR" ]; then
+    cd ${DIR}
+    make haproxy.service
+    cp haproxy.service /etc/systemd/system/.
+    systemctl daemon-reload
+    systemctl enable haproxy
+    systemctl restart haproxy
+  else
+    err location \($DIR\) is not a directory.
+  fi
+else
+  err location \($DIR\) does not exist.
+fi

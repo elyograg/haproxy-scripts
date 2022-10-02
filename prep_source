@@ -1,0 +1,73 @@
+#!/bin/sh
+
+cd /usr/local/src
+
+if [ -f /etc/redhat-release ]; then
+  /bin/yum -y makecache
+  /bin/yum -y install \
+    lsof \
+    iotop \
+    iptraf \
+    netcat \
+    sysstat \
+    docker \
+    screen \
+    perl-IPC-Cmd \
+    perl-Digest-SHA \
+    openssl-devel \
+    zlib-devel \
+    pcre2-devel \
+    systemd-devel \
+    autoconf \
+    automake \
+    binutils \
+    bison \
+    flex \
+    gcc \
+    gcc-c++ \
+    gettext \
+    libtool \
+    make \
+    patch \
+    pkgconfig \
+    redhat-rpm-config \
+    rpm-build \
+    rpm-sign \
+    byacc \
+    cscope \
+    ctags \
+    diffstat \
+    doxygen \
+    elfutils \
+    gcc-gfortran \
+    git \
+    indent \
+    intltool \
+    patchutils \
+    rcs \
+    subversion \
+    swig \
+    systemtap \
+
+  # blank line above is intentional
+else
+  echo "System is not redhat-based.  Trying debian/ubuntu commands."
+  echo "Pausing for 3 seconds first. Press ctrl-c if you want to abort."
+  sleep 3
+  /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
+  /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
+  /usr/bin/apt -y update
+  /usr/bin/apt -y build-dep haproxy
+  /usr/bin/apt -y build-dep openssl
+  /usr/bin/apt -y install build-essential git screen docker
+fi
+
+rm -rf old.git-haproxy-master
+mv git-haproxy-master old.git-haproxy-master
+git clone https://github.com/haproxy/haproxy.git git-haproxy-master
+
+rm -rf old.git-quictls
+mv git-quictls old.git-quictls
+git clone https://github.com/quictls/openssl.git git-quictls
+
+
