@@ -8,14 +8,14 @@ DIR=`dirname $0`/$1/admin/systemd
 if [ -e "$DIR" ]; then
   if [ -d "$DIR" ]; then
     cd ${DIR}
-    make haproxy.service
-    cp haproxy.service /etc/systemd/system/.
-    systemctl daemon-reload
-    systemctl enable haproxy
-    systemctl restart haproxy
+    sudo make haproxy.service
+    sudo cp haproxy.service /etc/systemd/system/.
+    sudo systemctl daemon-reload
+    sudo systemctl enable haproxy
+    sudo systemctl restart haproxy
   else
-    err location \($DIR\) is not a directory.
+    err "location ($DIR) is not a directory."
   fi
 else
-  err location \($DIR\) does not exist.
+  err "location ($DIR) does not exist."
 fi
