@@ -3,15 +3,8 @@
 cd /usr/local/src
 
 if [ -f /etc/redhat-release ]; then
-  /bin/yum -y makecache
-  /bin/yum -y install \
-    lsof \
-    iotop \
-    iptraf \
-    netcat \
-    sysstat \
-    docker \
-    screen \
+  sudo yum -y makecache
+  sudo yum -y install \
     perl-IPC-Cmd \
     perl-Digest-SHA \
     openssl-devel \
@@ -51,23 +44,19 @@ if [ -f /etc/redhat-release ]; then
 
   # blank line above is intentional
 else
-  echo "System is not redhat-based.  Trying debian/ubuntu commands."
-  echo "Pausing for 3 seconds first. Press ctrl-c if you want to abort."
-  sleep 3
-  /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
-  /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
-  /usr/bin/apt -y update
-  /usr/bin/apt -y build-dep haproxy
-  /usr/bin/apt -y build-dep openssl
-  /usr/bin/apt -y install build-essential git screen docker
+  echo "Trying debian/ubuntu commands"
+  sudo /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
+  sudo /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
+  sudo /usr/bin/apt -y update
+  sudo /usr/bin/apt -y build-dep haproxy
+  sudo /usr/bin/apt -y build-dep openssl
+  sudo /usr/bin/apt -y install build-essential git
 fi
 
-rm -rf old.git-haproxy-master
-mv git-haproxy-master old.git-haproxy-master
-git clone https://github.com/haproxy/haproxy.git git-haproxy-master
+sudo rm -rf old.git-haproxy-2.7
+sudo mv git-haproxy-2.7 old.git-haproxy-2.7
+sudo git clone https://git.haproxy.org/git/haproxy-2.7.git git-haproxy-2.7
 
-rm -rf old.git-quictls
-mv git-quictls old.git-quictls
-git clone https://github.com/quictls/openssl.git git-quictls
-
-
+sudo rm -rf old.git-quictls
+sudo mv git-quictls old.git-quictls
+sudo git clone https://github.com/quictls/openssl.git git-quictls

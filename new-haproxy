@@ -1,8 +1,4 @@
-#!/bin/sh
-
-err() {
-  echo "E: $*" >>/dev/stderr
-}
+#!/bin/bash
 
 if [ -d /opt/quictls/lib64 ]; then
   QUICTLS_LIB=/opt/quictls/lib64
@@ -11,18 +7,25 @@ else
 fi
 
 if [ -z "$1" ]; then
-  err "Command needs an argument, the directory with haproxy source"
-  exit 1
+  die "Command needs an argument, the subdirectory with haproxy source"
 fi
 
-DIR=`dirname $0`/$1
+SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+HAPROXY_SRC_DIR="${SCRIPT_DIR}/$1"
+source "${SCRIPT_DIR}/functions.sh"
 
-if [ -e "$DIR" ]; then
-  if [ -d "$DIR" ]; then
-    cd $1
-    git pull --rebase
-    make clean &&
-    make -j4 TARGET=linux-glibc \
+CPU_COUNT=$(cpu_count)
+((MAKE_COUNT=CPU_COUNT/4))
+if [ "${MAKE_COUNT}" -lt 2 ]; then
+  MAKE_COUNT=2
+fi
+
+if [ -e "${HAPROXY_SRC_DIR}" ]; then
+  if [ -d "${HAPROXY_SRC_DIR}" ]; then
+    cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
+    sudo git pull --rebase
+    sudo make clean &&
+    sudo make -j${MAKE_COUNT} TARGET=linux-glibc \
       USE_PCRE2_JIT=1 \
       USE_OPENSSL=1 \
       USE_ZLIB=1 \
@@ -38,21 +41,20 @@ if [ -e "$DIR" ]; then
 #      DEBUG="-DDEBUG_H3 -DDEBUG_QPACK" \
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      make install
+      sudo make install
       RETVAL="$?"
       if [ "$RETVAL" -ne 0 ]; then
-        err "Install failed!"
-	exit 1
+        die "Install failed!"
       fi
-      make clean
-      service haproxy restart
+      sudo make clean
+      sudo service haproxy restart
       echo "haproxy restarted!"
     else
       err "Build failed! skipping install!"
     fi
   else
-    err "location ($DIR) is not a directory."
+    err "location (${HAPROXY_SRC_DIR}) is not a directory."
   fi
 else
-  err "location ($DIR) does not exist."
+  err "location (${HAPROXY_SRC_DIR}) does not exist."
 fi

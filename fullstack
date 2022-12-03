@@ -1,5 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ./new-quic git-quictls
-./new-haproxy git-haproxy-master
-
+./new-haproxy git-haproxy-2.7

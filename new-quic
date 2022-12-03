@@ -1,4 +1,14 @@
-#!/bin/sh
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"
+source "${SCRIPT_DIR}/functions.sh"
+
+CPU_COUNT=$(cpu_count)
+((MAKE_COUNT=CPU_COUNT/4))
+if [ "${MAKE_COUNT}" -lt 2 ]; then
+  MAKE_COUNT=2
+fi
 
 add_bin_to_path() {
   if [ -d /opt/quictls/lib64 ]; then
@@ -16,49 +26,54 @@ EOF
 }
 
 do_git_update() {
-  git checkout `git remote show origin | grep 'HEAD branch' | cut -d' ' -f5`
+  git pull --rebase
+  git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
   git pull --rebase
 }
 
 CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 
-if [ "$(uname -i)" = "x86_64" ]; then
-        CONFARGS="${CONFARGS} enable-ec_nistp_64_gcc_128"
+if [ "$(uname -i)" == "x86_64" ]; then
+  CONFARGS="${CONFARGS} enable-ec_nistp_64_gcc_128"
 fi
 
 if [ -z "$1" ]; then
-  err "Command needs an argument, the directory with quictls source"
-  exit 1
+  die "Command needs an argument, the subdirectory with quictls source"
 fi
 
-DIR=`dirname $0`/$1
-if [ -e "$DIR" ]; then
-  if [ -d "$DIR" ]; then
-    cd $DIR
-    do_git_update
-    make distclean
-    ./config ${CONFARGS}
-    rm -rf /opt/old.quictls
-    mv /opt/quictls /opt/old.quictls
-    make -j 6
+CPU_COUNT=$(cpu_count)
+((MAKE_COUNT=CPU_COUNT/4))
+if [ "${MAKE_COUNT}" -lt 2 ]; then
+  MAKE_COUNT=2
+fi
+
+if [ -e "${QUICTLS_SRC_DIR}" ]; then
+  if [ -d "${QUICTLS_SRC_DIR}" ]; then
+    cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
+    sudo bash -c "$(declare -f do_git_update); do_git_update"
+    sudo make distclean
+    sudo ./config ${CONFARGS}
+    sudo rm -rf /opt/old.quictls
+    sudo mv /opt/quictls /opt/old.quictls
+    sudo make -j ${MAKE_COUNT}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      make install
+      sudo make install
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
-        add_bin_to_path
-	rm -rf /opt/quictls/ssl/certs
-        ln -s /etc/ssl/certs /opt/quictls/ssl/certs
-        make distclean
+        sudo bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
+	sudo rm -rf /opt/quictls/ssl/certs
+        sudo ln -s /etc/ssl/certs /opt/quictls/ssl/certs
+        sudo make distclean
       else
-        echo Install failed\!
+        err "Install failed!"
       fi
     else
-      echo Build failed\! skipping install\!
+      err "Build failed! skipping install!"
     fi
   else
-    echo location \($DIR\) is not a directory.
+    err "location (${QUICTLS_SRC_DIR}) is not a directory."
   fi
 else
-  echo location \($DIR\) does not exist.
+  err "location (${QUICTLS_SRC_DIR}) does not exist."
 fi
