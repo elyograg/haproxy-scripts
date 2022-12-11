@@ -8,9 +8,12 @@ cd /usr/local/src
 mkdir -p /etc/haproxy
 
 sudo rm -rf /var/www/html/test_file
-./prep_source
-./install_haproxy_service git-haproxy-2.7
-sudo cp ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+if [ ! -f "./.setup" ]; then
+  ./prep_source
+  ./install_haproxy_service git-haproxy-2.7
+  sudo cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+  touch .setup
+fi
 ./fullstack
 sudo touch /var/www/html/test_file
 curl -s -f http://localhost/test_file
