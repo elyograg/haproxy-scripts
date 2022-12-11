@@ -1,0 +1,16 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+source "${SCRIPT_DIR}/functions.sh"
+
+rsync -avH --delete ./ /usr/local/src/ --exclude=git* --exclude=.setup
+cd /usr/local/src
+mkdir -p /etc/haproxy
+
+sudo rm -rf /var/www/html/test_file
+./prep_source
+./install_haproxy_service git-haproxy-2.7
+sudo cp ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+./fullstack
+sudo touch /var/www/html/test_file
+curl -s -f http://localhost/test_file
