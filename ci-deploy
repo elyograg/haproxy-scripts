@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# Not everything needs sudo because sudo is in the scripts.
+
 SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
 source "${SCRIPT_DIR}/functions.sh"
 
-rsync -avH --delete ./ /usr/local/src/ --exclude=git* --exclude=.setup
+sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git* --exclude=.setup
 cd /usr/local/src
-mkdir -p /etc/haproxy
+sudo mkdir -p /etc/haproxy
 
 sudo rm -rf /var/www/html/test_file
 if [ ! -f "./.setup" ]; then
