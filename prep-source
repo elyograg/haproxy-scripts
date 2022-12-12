@@ -55,12 +55,12 @@ else
   sudo /usr/bin/apt -y install build-essential git zlib1g-dev
 fi
 
-sudo rm -rf old.git-haproxy-2.7 > /dev/null
-sudo rm -rf old.git-haproxy-2.7 > /dev/null
+sudo rm -rf old.git-haproxy-2.7 > /dev/null 2> /dev/null
+sudo rm -rf old.git-haproxy-2.7 > /dev/null 2> /dev/null
 sudo mv git-haproxy-2.7 old.git-haproxy-2.7
 sudo git clone https://git.haproxy.org/git/haproxy-2.7.git git-haproxy-2.7
 
-sudo rm -rf old.git-quictls > /dev/null
-sudo rm -rf old.git-quictls > /dev/null
+sudo rm -rf old.git-quictls > /dev/null 2> /dev/null
+sudo rm -rf old.git-quictls > /dev/null 2> /dev/null
 sudo mv git-quictls old.git-quictls
 sudo git clone https://github.com/quictls/openssl.git git-quictls
