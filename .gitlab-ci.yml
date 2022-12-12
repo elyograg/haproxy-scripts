@@ -14,9 +14,8 @@ build_and_deploy:
     -   ./prep-source
     -   ./install-haproxy-service git-haproxy-2.7
     -   sudo cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
-    -   touch .setup
+    -   sudo touch .setup
     - fi
     - ./fullstack
     - sudo touch /var/www/html/test_file
     - curl -s -f http://localhost/test_file
-
