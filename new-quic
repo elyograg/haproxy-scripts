@@ -51,20 +51,20 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
     sudo bash -c "$(declare -f do_git_update); do_git_update"
-    sudo make distclean
+    sudo make -s distclean > /dev/null
     sudo ./config ${CONFARGS}
     sudo rm -rf /opt/old.quictls
     sudo mv /opt/quictls /opt/old.quictls
-    sudo make -j ${MAKE_COUNT}
+    sudo make -s -j ${MAKE_COUNT} > /dev/null
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      sudo make install
+      sudo make -s install > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
 	sudo rm -rf /opt/quictls/ssl/certs
         sudo ln -s /etc/ssl/certs /opt/quictls/ssl/certs
-        sudo make distclean
+        sudo make -s distclean > /dev/null
       else
         die "Install failed!"
       fi

@@ -3,6 +3,7 @@
 cd /usr/local/src
 
 if [ -f /etc/redhat-release ]; then
+  echo "Trying redhat commands"
   sudo yum -y makecache
   sudo yum -y install \
     perl-IPC-Cmd \
@@ -53,10 +54,10 @@ else
   sudo /usr/bin/apt -y install build-essential git
 fi
 
-sudo rm -rf old.git-haproxy-2.7
+sudo rm -rf old.git-haproxy-2.7 > /dev/null
 sudo mv git-haproxy-2.7 old.git-haproxy-2.7
 sudo git clone https://git.haproxy.org/git/haproxy-2.7.git git-haproxy-2.7
 
-sudo rm -rf old.git-quictls
+sudo rm -rf old.git-quictls > /dev/null
 sudo mv git-quictls old.git-quictls
 sudo git clone https://github.com/quictls/openssl.git git-quictls
