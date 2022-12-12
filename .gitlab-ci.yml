@@ -6,6 +6,7 @@ build_deploy_test:
   script:
     - sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git*
     - cd /usr/local/src
+    - pwd -P
     - sudo mkdir -p /etc/haproxy
     - sudo rm -rf /var/www/html/test_file
     - sudo ./prep-source
