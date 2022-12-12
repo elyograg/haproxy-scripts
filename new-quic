@@ -58,7 +58,7 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     sudo make -s -j ${MAKE_COUNT} > /dev/null
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      sudo make -s install > /dev/null
+      sudo make install
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
