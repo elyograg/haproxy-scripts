@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
 QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"
