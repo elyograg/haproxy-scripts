@@ -50,11 +50,11 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
       sudo service haproxy restart
       echo "haproxy restarted!"
     else
-      err "Build failed! skipping install!"
+      die "Build failed!"
     fi
   else
-    err "location (${HAPROXY_SRC_DIR}) is not a directory."
+    die "location (${HAPROXY_SRC_DIR}) is not a directory."
   fi
 else
-  err "location (${HAPROXY_SRC_DIR}) does not exist."
+  die "location (${HAPROXY_SRC_DIR}) does not exist."
 fi

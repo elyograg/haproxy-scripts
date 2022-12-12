@@ -66,14 +66,14 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
         sudo ln -s /etc/ssl/certs /opt/quictls/ssl/certs
         sudo make distclean
       else
-        err "Install failed!"
+        die "Install failed!"
       fi
     else
-      err "Build failed! skipping install!"
+      die "Build failed!"
     fi
   else
-    err "location (${QUICTLS_SRC_DIR}) is not a directory."
+    die "location (${QUICTLS_SRC_DIR}) is not a directory."
   fi
 else
-  err "location (${QUICTLS_SRC_DIR}) does not exist."
+  die "location (${QUICTLS_SRC_DIR}) does not exist."
 fi
