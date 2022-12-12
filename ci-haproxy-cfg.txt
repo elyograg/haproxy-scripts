@@ -14,8 +14,6 @@ defaults
 	option	dontlognull
 	option	redispatch
 	retries	1
-	compression algo gzip
-	compression type text/css text/html text/javascript application/javascript text/plain text/xml application/json application/css
 	timeout connect	5s
 	timeout client	15s
 	timeout server	120s
