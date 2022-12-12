@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 if [ -d /opt/quictls/lib64 ]; then
   QUICTLS_LIB=/opt/quictls/lib64
@@ -24,8 +24,8 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
   if [ -d "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
     sudo git pull --rebase
-    sudo make clean &&
-    sudo make -j${MAKE_COUNT} TARGET=linux-glibc \
+    sudo make -s clean && > /dev/null
+    sudo make -s -j${MAKE_COUNT} TARGET=linux-glibc \
       USE_PCRE2_JIT=1 \
       USE_OPENSSL=1 \
       USE_ZLIB=1 \
@@ -36,17 +36,16 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
       SSL_LIB=$QUICTLS_LIB \
       LDFLAGS="-Wl,-rpath,$QUICTLS_LIB" \
       DEBUG=" " \
-
-# blank line above is intentional.
 #      DEBUG="-DDEBUG_H3 -DDEBUG_QPACK" \
+      > /dev/null
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      sudo make install
+      sudo make -s install > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -ne 0 ]; then
         die "Install failed!"
       fi
-      sudo make clean
+      sudo make -s clean > /dev/null
       sudo service haproxy restart
       echo "haproxy restarted!"
     else

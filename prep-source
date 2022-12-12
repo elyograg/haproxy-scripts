@@ -51,7 +51,7 @@ else
   sudo /usr/bin/apt -y update
   sudo /usr/bin/apt -y build-dep haproxy
   sudo /usr/bin/apt -y build-dep openssl
-  sudo /usr/bin/apt -y install build-essential git
+  sudo /usr/bin/apt -y install build-essential git zlib1g-dev
 fi
 
 sudo rm -rf old.git-haproxy-2.7 > /dev/null

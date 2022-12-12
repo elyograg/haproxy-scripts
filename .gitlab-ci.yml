@@ -8,14 +8,10 @@ build_and_deploy:
     - sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git* --exclude=.setup
     - cd /usr/local/src
     - sudo mkdir -p /etc/haproxy
-
     - sudo rm -rf /var/www/html/test_file
-    - if [ ! -f "./.setup" ]; then
-    -   ./prep-source
-    -   ./install-haproxy-service git-haproxy-2.7
-    -   sudo cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
-    -   sudo touch .setup
-    - fi
-    - ./fullstack
+    - sudo ./prep-source
+    - sudo ./install-haproxy-service git-haproxy-2.7
+    - sudo cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo ./fullstack
     - sudo touch /var/www/html/test_file
     - curl -s -f http://localhost/test_file
