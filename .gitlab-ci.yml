@@ -1,11 +1,10 @@
 stages:
-  - deploy
+  - buildtest
 
-build_and_deploy:
-  stage: deploy
+build_deploy_test:
+  stage: buildtest
   script:
-    - echo "Building and deploying"
-    - sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git* --exclude=.setup
+    - sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git*
     - cd /usr/local/src
     - sudo mkdir -p /etc/haproxy
     - sudo rm -rf /var/www/html/test_file
