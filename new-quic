@@ -47,11 +47,11 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     sudo bash -c "$(declare -f do_git_update); do_git_update"
     sudo make -s distclean > /dev/null
     sudo ./config ${CONFARGS}
-    sudo rm -rf /opt/old.quictls
-    sudo mv /opt/quictls /opt/old.quictls
     sudo make -s -j ${MAKE_COUNT} > /dev/null
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
+      sudo rm -rf /opt/old.quictls
+      sudo mv /opt/quictls /opt/old.quictls
       sudo make -s install > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
