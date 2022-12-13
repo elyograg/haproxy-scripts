@@ -41,12 +41,6 @@ if [ -z "$1" ]; then
   die "Command needs an argument, the subdirectory with quictls source"
 fi
 
-CPU_COUNT=$(cpu_count)
-((MAKE_COUNT=CPU_COUNT/4))
-if [ "${MAKE_COUNT}" -lt 2 ]; then
-  MAKE_COUNT=2
-fi
-
 if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
