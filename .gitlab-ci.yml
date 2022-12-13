@@ -1,8 +1,8 @@
 stages:
-  - buildtest
+  - build_deploy_test
 
 build_deploy_test:
-  stage: buildtest
+  stage: build_deploy_test
   script:
     - sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git-* --exclude=old.git-*
     - cd /usr/local/src
