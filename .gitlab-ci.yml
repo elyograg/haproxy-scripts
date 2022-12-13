@@ -6,8 +6,8 @@ build_deploy_test:
   script:
     - sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git-* --exclude=old.git-*
     - cd /usr/local/src
-    - perl -e "use re; $pat = '(?{ $foo = 1 })'; /foo${pat}bar/;"
-    - sudo perl -e "use re; $pat = '(?{ $foo = 1 })'; /foo${pat}bar/;"
+    - perl -e "use re; /foobar/;"
+    - sudo perl -e "use re; /foobar/;"
     - sudo chown -R root:root .
     - sudo mkdir -p /etc/haproxy
     - sudo rm -rf /var/www/html/test_file
