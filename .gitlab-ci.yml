@@ -16,4 +16,3 @@ build_deploy_test:
     - sudo ./fullstack
     - sudo touch /var/www/html/test_file
     - sudo docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k https://host.docker.internal/test_file
-    - env
