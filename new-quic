@@ -31,7 +31,7 @@ do_git_update() {
   git pull --rebase
 }
 
-CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
+#CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 CONFARGS="--prefix=/opt/quictls enable-tls1_3 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 
 if [ "$(uname -i)" == "x86_64" ]; then
