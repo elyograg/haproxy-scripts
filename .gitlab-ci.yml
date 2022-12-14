@@ -14,5 +14,7 @@ build_deploy_test:
     - sudo cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
     - sudo cp -a selfsigned.pem /etc/ssl/certs/local/.
     - sudo ./fullstack
-    - sudo touch /var/www/html/test_file
+    - sudo rm -f /tmp/test_file
+    - echo "TEST FILE CONTENTS" > /tmp/test_file
+    - sudo cp -f /tmp/test_file /var/www/html/.
     - sudo docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 4 -s -f -k "https://host.docker.internal/test_file" --http3
