@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
 QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"
@@ -45,17 +45,22 @@ fi
 if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
+    info "Doing git update"
     sudo bash -c "$(declare -f do_git_update); do_git_update"
+    info "Cleaning the repo"
     sudo make -s distclean > /dev/null
+    info "Configuring the repo"
     sudo ./config ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      time sudo make -s -j ${MAKE_COUNT} > /dev/null
+      info "Building"
+      sudo make -s -j ${MAKE_COUNT} > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo rm -rf /opt/old.quictls
         sudo mv /opt/quictls /opt/old.quictls
-        time sudo make -s install_sw install_ssldirs > /dev/null
+        info "Installing"
+        sudo make -s install_sw install_ssldirs > /dev/null
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then
           sudo bash -c "$(declare -f add_bin_to_path); add_bin_to_path"

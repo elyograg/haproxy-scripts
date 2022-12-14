@@ -1,7 +1,19 @@
 #!/bin/bash
 
+get_timestamp() {
+  date "+%+4Y%m%d-%H%M%S"
+}
+
+info() {
+  echo -e "I $(get_timestamp): $*"
+}
+
+warn() {
+  echo -e "W $(get_timestamp): $*"
+}
+
 err() {
-  echo "E: $*" >>/dev/stderr
+  echo -e "E $(get_timestamp): $*" >>/dev/stderr
 }
 
 die() {
