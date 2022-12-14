@@ -12,7 +12,6 @@ if [ -e "$DIR" ]; then
     sudo cp haproxy.service /etc/systemd/system/.
     sudo systemctl daemon-reload
     sudo systemctl enable haproxy
-    sudo systemctl restart haproxy
   else
     err "location ($DIR) is not a directory."
   fi
