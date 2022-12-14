@@ -1,27 +1,18 @@
 global
-	maxconn 4096
+	maxconn 64
 	daemon
-	#debug
-	#quiet
-	spread-checks	2
-	tune.bufsize	65536
-	stats socket /etc/haproxy/stats.socket
 
 defaults
 	mode	http
-	balance	leastconn
-	option	httplog
-	option	dontlognull
-	option	redispatch
-	retries	1
-	timeout connect	5s
-	timeout client	15s
-	timeout server	120s
-	timeout http-keep-alive	5s
-	retry-on all-retryable-errors
 
 frontend web80
 	bind 0.0.0.0:80 name web80
+	default_backend be-local-81
+
+frontend web
+	description One frontend to rule them all
+	bind 0.0.0.0:443 name web443 ssl crt /etc/ssl/certs/local/selfsigned.pem alpn h2,http/1.1 npn h2,http/1.1 allow-0rtt curves secp521r1:secp384r1
+	http-response add-header alt-svc 'h3=":443"; ma=7200,h3-29=":443"; ma=7200,h3-Q050=":443"; ma=7200,h3-Q046=":443"; ma=7200,h3-Q043=":443"; ma=7200,quic=":443"; ma=7200'
 	default_backend be-local-81
 
 backend be-local-81

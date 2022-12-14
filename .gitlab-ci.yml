@@ -14,6 +14,7 @@ build_deploy_test:
     - sudo ./prep-source
     - sudo ./install-haproxy-service git-haproxy-2.7
     - sudo cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo cp -a self-signed.pem /etc/ssl/certs/local/.
     - sudo ./fullstack
     - sudo touch /var/www/html/test_file
-    - curl -s -f http://localhost/test_file
+    - docker run -it --rm ymuski/curl-http3 curl -s -f -k https://localhost/test_file --http3
