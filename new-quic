@@ -27,11 +27,12 @@ EOF
 
 do_git_update() {
   git pull --rebase
-  git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+  git checkout "$(git remote show origin | grep "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')"
   git pull --rebase
 }
 
 CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
+CONFARGS="--prefix=/opt/quictls enable-tls1_3 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 
 if [ "$(uname -i)" == "x86_64" ]; then
   CONFARGS="${CONFARGS} enable-ec_nistp_64_gcc_128"
@@ -49,12 +50,12 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     sudo ./config ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      sudo make -s -j ${MAKE_COUNT} > /dev/null
+      time sudo make -s -j ${MAKE_COUNT} > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo rm -rf /opt/old.quictls
         sudo mv /opt/quictls /opt/old.quictls
-        sudo make -s install > /dev/null
+        time sudo make -s install > /dev/null
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then
           sudo bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
