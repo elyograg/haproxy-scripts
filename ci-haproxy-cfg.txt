@@ -1,6 +1,7 @@
 global
 	maxconn 64
 	daemon
+	log 127.0.0.1:514 local0 len 65535 format rfc5424
 
 defaults
 	mode	http

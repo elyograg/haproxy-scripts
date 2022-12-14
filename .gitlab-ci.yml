@@ -15,4 +15,4 @@ build_deploy_test:
     - sudo cp -a selfsigned.pem /etc/ssl/certs/local/.
     - sudo ./fullstack
     - sudo touch /var/www/html/test_file
-    - sudo docker run --rm ymuski/curl-http3 curl -s -f -k https://host.docker.internal/test_file --http3
+    - sudo docker run --rm ymuski/curl-http3 curl -v -s -f -k https://host.docker.internal/test_file --http3
