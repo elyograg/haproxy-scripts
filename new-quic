@@ -49,17 +49,17 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     sudo bash -c "$(declare -f do_git_update); do_git_update"
     info "Cleaning the repo"
     sudo make -s distclean > /dev/null
-    info "Configuring the repo"
+    info "Configuring quictls"
     sudo ./config ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      info "Building"
+      info "Building quictls"
       sudo make -s -j ${MAKE_COUNT} > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo rm -rf /opt/old.quictls
         sudo mv /opt/quictls /opt/old.quictls
-        info "Installing"
+        info "Installing quictls"
         sudo make -s install_sw install_ssldirs > /dev/null
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then

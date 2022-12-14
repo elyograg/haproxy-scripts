@@ -26,7 +26,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
     info "Updating and cleaning"
     sudo make -s clean && > /dev/null
     sudo git pull --rebase
-    info "Building"
+    info "Building haproxy"
     sudo make -s -j${MAKE_COUNT} TARGET=linux-glibc \
       USE_PCRE2_JIT=1 \
       USE_OPENSSL=1 \
@@ -43,7 +43,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
 #      DEBUG="-DDEBUG_H3 -DDEBUG_QPACK" \
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      info "Installing"
+      info "Installing haproxy"
       sudo make -s install > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -ne 0 ]; then
@@ -51,7 +51,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
       fi
       info "Cleaning"
       sudo make -s clean > /dev/null
-      info "Restarting"
+      info "Restarting haproxy"
       sudo service haproxy restart
     else
       die "Build failed!"
