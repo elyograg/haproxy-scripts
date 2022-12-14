@@ -18,6 +18,5 @@ frontend web
 	default_backend be-local-81
 
 backend be-local-81
-	no log
 	option httpchk
 	server localhost 127.0.0.1:81 
