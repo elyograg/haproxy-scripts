@@ -5,8 +5,8 @@ global
 
 defaults
 	log global
-	mode	http
 	option httplog
+	mode http
 
 frontend web80
 	bind 0.0.0.0:80 name web80
