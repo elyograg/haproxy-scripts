@@ -23,7 +23,7 @@ fi
 if [ -e "${HAPROXY_SRC_DIR}" ]; then
   if [ -d "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
-    info "Updating and cleaning"
+    info "Haproxy repo maintenance"
     sudo make -s clean && > /dev/null
     sudo git pull --rebase
     info "Building haproxy"
@@ -49,7 +49,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
       if [ "$RETVAL" -ne 0 ]; then
         die "Install failed!"
       fi
-      info "Cleaning"
+      info "Cleaning haproxy repo"
       sudo make -s clean > /dev/null
       info "Restarting haproxy"
       sudo service haproxy restart

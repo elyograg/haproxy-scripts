@@ -45,9 +45,9 @@ fi
 if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
-    info "Doing git update"
+    info "Updating quictls repo"
     sudo bash -c "$(declare -f do_git_update); do_git_update"
-    info "Cleaning the repo"
+    info "Cleaning quictls repo"
     sudo make -s distclean > /dev/null
     info "Configuring quictls"
     sudo ./config ${CONFARGS}
