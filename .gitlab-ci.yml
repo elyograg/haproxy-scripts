@@ -4,17 +4,15 @@ stages:
 build_deploy_test:
   stage: build_deploy_test
   script:
-    - sudo rsync -avH --delete ./ /usr/local/src/ --exclude=git-* --exclude=old.git-*
+    - sudo rsync -qaH --delete ./ /usr/local/src/
     - cd /usr/local/src
-    - perl -e "use re; /foobar/;"
-    - sudo perl -e "use re; /foobar/;"
     - sudo chown -R root:root .
     - sudo mkdir -p /etc/haproxy
     - sudo rm -rf /var/www/html/test_file
     - sudo ./prep-source
     - sudo ./install-haproxy-service git-haproxy-2.7
     - sudo cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
-    - sudo cp -a self-signed.pem /etc/ssl/certs/local/.
+    - sudo cp -a selfsigned.pem /etc/ssl/certs/local/.
     - sudo ./fullstack
     - sudo touch /var/www/html/test_file
     - docker run -it --rm ymuski/curl-http3 curl -s -f -k https://localhost/test_file --http3
