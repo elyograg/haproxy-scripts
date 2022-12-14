@@ -1,7 +1,7 @@
 #!/bin/bash
 
 get_timestamp() {
-  date "+%+4Y%m%d-%H%M%S"
+  date "+%+4Y%-m-%d_%H:%M:%S"
 }
 
 info() {
