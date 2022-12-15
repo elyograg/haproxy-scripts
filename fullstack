@@ -1,8 +1,11 @@
 #!/bin/bash
 
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
+  echo "NOT doing CI."
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
+    echo "Full hostname contains elyograg."
     if [[ "$(hostname)" != *"smeagol"* ]]; then
+      echo "Hostname does not contain smeagol."
       ./sync_from_smeagol
     fi
   fi
