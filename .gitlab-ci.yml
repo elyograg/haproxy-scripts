@@ -4,6 +4,7 @@ stages:
 build_and_test:
   stage: build_and_test
   script:
+    - env > /tmp/cienv.txt
     - sudo -E rsync -qaH --delete ./ /usr/local/src/
     - cd /usr/local/src
     - sudo -E chown -R root:root .
