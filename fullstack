@@ -1,4 +1,12 @@
 #!/bin/bash
 
+if [ -z "${CI_COMMIT_REF_NAME}" ]; then
+  if [[ "$(hostname -f)" == *"elyograg"* ]]; then
+    if [[ "$(hostname)" != *"smeagol"* ]]; then
+      ./sync_from_smeagol
+    fi
+  fi
+fi
+
 ./new-quic git-quictls
 ./new-haproxy git-haproxy-2.7

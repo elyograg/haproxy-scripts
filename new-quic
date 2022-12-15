@@ -1,14 +1,9 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
-QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"
 source "${SCRIPT_DIR}/functions.sh"
-
-CPU_COUNT=$(cpu_count)
-((MAKE_COUNT=CPU_COUNT/4))
-if [ "${MAKE_COUNT}" -lt 2 ]; then
-  MAKE_COUNT=2
-fi
+QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"
+MAKE_COUNT="$(make_cpu_count)"
 
 add_bin_to_path() {
   if [ -d /opt/quictls/lib64 ]; then

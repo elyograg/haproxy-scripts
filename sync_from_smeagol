@@ -1,0 +1,11 @@
+#!/bin/sh
+
+SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+source "${SCRIPT_DIR}/functions.sh"
+
+REM_HOST="$1"
+if [ -z "$REM_HOST" ]; then
+  REM_HOST=smeagol.elyograg.org
+fi
+
+sudo rsync -avcHP --delete $REM_HOST:/usr/local/src/ /usr/local/src/

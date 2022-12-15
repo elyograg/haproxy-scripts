@@ -1,5 +1,10 @@
 #!/bin/bash
 
+SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+source "${SCRIPT_DIR}/functions.sh"
+HAPROXY_SRC_DIR="${SCRIPT_DIR}/$1"
+MAKE_COUNT="$(make_cpu_count)"
+
 if [ -d /opt/quictls/lib64 ]; then
   QUICTLS_LIB=/opt/quictls/lib64
 else
@@ -8,16 +13,6 @@ fi
 
 if [ -z "$1" ]; then
   die "Command needs an argument, the subdirectory with haproxy source"
-fi
-
-SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
-HAPROXY_SRC_DIR="${SCRIPT_DIR}/$1"
-source "${SCRIPT_DIR}/functions.sh"
-
-CPU_COUNT=$(cpu_count)
-((MAKE_COUNT=CPU_COUNT/4))
-if [ "${MAKE_COUNT}" -lt 2 ]; then
-  MAKE_COUNT=2
 fi
 
 if [ -e "${HAPROXY_SRC_DIR}" ]; then
