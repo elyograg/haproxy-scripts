@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "Starting fullstack script"
+echo "CI branch: ${CI_COMMIT_REF_NAME}"
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   echo "NOT doing CI."
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
