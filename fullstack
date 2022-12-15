@@ -8,5 +8,6 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   fi
 fi
 
+git pull --rebase
 ./new-quic git-quictls
 ./new-haproxy git-haproxy-2.7
