@@ -8,42 +8,12 @@ if [ -f /etc/redhat-release ]; then
   info "Trying redhat commands"
   sudo -E yum -y makecache
   sudo -E yum -y install \
-    perl-IPC-Cmd \
-    perl-Digest-SHA \
-    openssl-devel \
-    zlib-devel \
-    pcre2-devel \
-    systemd-devel \
-    autoconf \
-    automake \
-    binutils \
-    bison \
-    flex \
-    gcc \
-    gcc-c++ \
-    gettext \
-    libtool \
-    make \
-    patch \
-    pkgconfig \
-    redhat-rpm-config \
-    rpm-build \
-    rpm-sign \
-    byacc \
-    cscope \
-    ctags \
-    diffstat \
-    doxygen \
-    elfutils \
-    gcc-gfortran \
-    git \
-    indent \
-    intltool \
-    patchutils \
-    rcs \
-    subversion \
-    swig \
-    systemtap \
+    perl-IPC-Cmd perl-Digest-SHA openssl-devel zlib-devel pcre2-devel \
+    systemd-devel autoconf automake binutils bison flex \
+    gcc gcc-c++ gettext libtool make patch pkgconfig \
+    redhat-rpm-config rpm-build rpm-sign byacc cscope ctags \
+    diffstat doxygen elfutils gcc-gfortran git indent \
+    intltool patchutils rcs subversion swig systemtap \
 
   # blank line above is intentional
 else
@@ -58,8 +28,8 @@ fi
 
 sudo -E rm -rf old.git-haproxy-2.7 > /dev/null
 sudo -E mv git-haproxy-2.7 old.git-haproxy-2.7
-sudo -E git clone https://git.haproxy.org/git/haproxy-2.7.git git-haproxy-2.7
+sudo -E git clone -v https://git.haproxy.org/git/haproxy-2.7.git git-haproxy-2.7
 
 sudo -E rm -rf old.git-quictls > /dev/null
 sudo -E mv git-quictls old.git-quictls
-sudo -E git clone https://github.com/quictls/openssl.git git-quictls
+sudo -E git clone -v https://github.com/quictls/openssl.git git-quictls
