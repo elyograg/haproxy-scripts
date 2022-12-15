@@ -23,6 +23,7 @@ EOF
 
 do_git_update() {
   git pull --rebase
+  #git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
   git checkout "$(git remote show origin | grep "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')"
   git pull --rebase
 }
@@ -49,8 +50,9 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     sudo -E ./config ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      info "Building quictls, will take a few minutes"
-      sudo -E make -s -j ${MAKE_COUNT} > /dev/null
+      info "Building quictls, may take a few minutes"
+      info "Using ${MAKE_COUNT} threads with make"
+      sudo -E make -s -j ${MAKE_COUNT}
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo -E rm -rf /opt/old.quictls

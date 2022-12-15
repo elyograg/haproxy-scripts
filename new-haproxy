@@ -22,6 +22,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
     sudo -E make -s clean && > /dev/null
     sudo -E git pull --rebase
     info "Building haproxy"
+    info "Using ${MAKE_COUNT} threads with make"
     sudo -E make -s -j${MAKE_COUNT} TARGET=linux-glibc \
       USE_PCRE2_JIT=1 \
       USE_OPENSSL=1 \
