@@ -1,7 +1,7 @@
 stages:
   - build_and_test
 
-build_deploy_test:
+build_and_test:
   stage: build_and_test
   script:
     - sudo rsync -qaH --delete ./ /usr/local/src/
