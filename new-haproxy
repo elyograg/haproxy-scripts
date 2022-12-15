@@ -19,10 +19,10 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
   if [ -d "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
     info "Haproxy repo maintenance"
-    sudo make -s clean && > /dev/null
-    sudo git pull --rebase
+    sudo -E make -s clean && > /dev/null
+    sudo -E git pull --rebase
     info "Building haproxy"
-    sudo make -s -j${MAKE_COUNT} TARGET=linux-glibc \
+    sudo -E make -s -j${MAKE_COUNT} TARGET=linux-glibc \
       USE_PCRE2_JIT=1 \
       USE_OPENSSL=1 \
       USE_ZLIB=1 \
@@ -39,15 +39,15 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
       info "Installing haproxy"
-      sudo make -s install > /dev/null
+      sudo -E make -s install > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -ne 0 ]; then
         die "Install failed!"
       fi
       info "Cleaning haproxy repo"
-      sudo make -s clean > /dev/null
+      sudo -E make -s clean > /dev/null
       info "Restarting haproxy"
-      sudo service haproxy restart
+      sudo -E service haproxy restart
     else
       die "Build failed!"
     fi

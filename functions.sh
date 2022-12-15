@@ -29,7 +29,7 @@ make_cpu_count() {
   RET="$?"
   if [ "${CPUCOUNT_RECURSIVE}" -eq 0 ]; then
     if [ "${RET}" -ne 0 ]; then
-      sudo apt -y install python3-psutil python-is-python3 > /dev/null 2>/dev/null
+      sudo -E apt -y install python3-psutil python-is-python3 > /dev/null 2>/dev/null
       CPUCOUNT_RECURSIVE=1
       make_cpu_count
       RET="$?"

@@ -1,19 +1,15 @@
 #!/bin/bash
-echo "Starting fullstack script"
-echo "CI branch: ${CI_COMMIT_REF_NAME}"
-
-ps --forest
-
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   echo "NOT doing CI."
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
     echo "Full hostname contains elyograg."
     if [[ "$(hostname)" != *"smeagol"* ]]; then
       echo "Hostname does not contain smeagol."
-  #    ./sync_from_smeagol
+      echo "Syncing from smeagol"
+      ./sync_from_smeagol
     fi
   fi
-  sudo git pull --rebase
+  sudo -E git pull --rebase
 fi
 
 ./new-quic git-quictls

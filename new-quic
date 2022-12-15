@@ -41,27 +41,27 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
     info "Updating quictls repo"
-    sudo bash -c "$(declare -f do_git_update); do_git_update"
+    sudo -E bash -c "$(declare -f do_git_update); do_git_update"
     info "Cleaning quictls repo"
-    sudo make -s distclean > /dev/null
+    sudo -E make -s distclean > /dev/null
     info "Configuring quictls"
-    sudo ./config ${CONFARGS}
+    sudo -E ./config ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
       info "Building quictls"
-      sudo make -s -j ${MAKE_COUNT} > /dev/null
+      sudo -E make -s -j ${MAKE_COUNT} > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
-        sudo rm -rf /opt/old.quictls
-        sudo mv /opt/quictls /opt/old.quictls
+        sudo -E rm -rf /opt/old.quictls
+        sudo -E mv /opt/quictls /opt/old.quictls
         info "Installing quictls"
-        sudo make -s install_sw install_ssldirs > /dev/null
+        sudo -E make -s install_sw install_ssldirs > /dev/null
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then
-          sudo bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
-          sudo rm -rf /opt/quictls/ssl/certs
-          sudo ln -s /etc/ssl/certs /opt/quictls/ssl/certs
-          sudo make -s distclean > /dev/null
+          sudo -E bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
+          sudo -E rm -rf /opt/quictls/ssl/certs
+          sudo -E ln -s /etc/ssl/certs /opt/quictls/ssl/certs
+          sudo -E make -s distclean > /dev/null
         else
           die "Install failed!"
         fi

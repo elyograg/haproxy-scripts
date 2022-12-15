@@ -5,8 +5,8 @@ cd "${SCRIPT_DIR}" || exit 1
 
 if [ -f /etc/redhat-release ]; then
   echo "Trying redhat commands"
-  sudo yum -y makecache
-  sudo yum -y install \
+  sudo -E yum -y makecache
+  sudo -E yum -y install \
     perl-IPC-Cmd \
     perl-Digest-SHA \
     openssl-devel \
@@ -47,18 +47,18 @@ if [ -f /etc/redhat-release ]; then
   # blank line above is intentional
 else
   echo "Trying debian/ubuntu commands"
-  sudo /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
-  sudo /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
-  sudo /usr/bin/apt -y update
-  sudo /usr/bin/apt -y build-dep haproxy
-  sudo /usr/bin/apt -y build-dep openssl
-  sudo /usr/bin/apt -y install build-essential git zlib1g-dev
+  sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
+  sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
+  sudo -E /usr/bin/apt -y update
+  sudo -E /usr/bin/apt -y build-dep haproxy
+  sudo -E /usr/bin/apt -y build-dep openssl
+  sudo -E /usr/bin/apt -y install build-essential git zlib1g-dev
 fi
 
-sudo rm -rf old.git-haproxy-2.7 > /dev/null
-sudo mv git-haproxy-2.7 old.git-haproxy-2.7
-sudo git clone https://git.haproxy.org/git/haproxy-2.7.git git-haproxy-2.7
+sudo -E rm -rf old.git-haproxy-2.7 > /dev/null
+sudo -E mv git-haproxy-2.7 old.git-haproxy-2.7
+sudo -E git clone https://git.haproxy.org/git/haproxy-2.7.git git-haproxy-2.7
 
-sudo rm -rf old.git-quictls > /dev/null
-sudo mv git-quictls old.git-quictls
-sudo git clone https://github.com/quictls/openssl.git git-quictls
+sudo -E rm -rf old.git-quictls > /dev/null
+sudo -E mv git-quictls old.git-quictls
+sudo -E git clone https://github.com/quictls/openssl.git git-quictls
