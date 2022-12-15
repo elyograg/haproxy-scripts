@@ -18,4 +18,4 @@ build_and_test:
     - sudo -E rm -rf /tmp/test_file
     - echo "TEST FILE CONTENTS" > /tmp/test_file
     - sudo -E cp -f /tmp/test_file /var/www/html/.
-    - sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3
+    - sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -v -m 5 -s -f -k "https://host.docker.internal/test_file" --http3
