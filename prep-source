@@ -1,10 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
-cd "${SCRIPT_DIR}" || exit 1
+source "${SCRIPT_DIR}/functions.sh"
+cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}.  This is weird."
 
 if [ -f /etc/redhat-release ]; then
-  echo "Trying redhat commands"
+  info "Trying redhat commands"
   sudo -E yum -y makecache
   sudo -E yum -y install \
     perl-IPC-Cmd \
@@ -46,7 +47,7 @@ if [ -f /etc/redhat-release ]; then
 
   # blank line above is intentional
 else
-  echo "Trying debian/ubuntu commands"
+  info "Trying debian/ubuntu commands"
   sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
   sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
   sudo -E /usr/bin/apt -y update

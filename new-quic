@@ -14,7 +14,8 @@ add_bin_to_path() {
   rm -f /usr/local/bin/qssl
   cat << EOF > /usr/local/bin/qssl
 #!/bin/sh
-export LD_LIBRARY_PATH=${QUICTLS_LIB}
+LD_LIBRARY_PATH=${QUICTLS_LIB}
+export LD_LIBRARY_PATH
 /opt/quictls/bin/openssl \$*
 EOF
   chmod +x /usr/local/bin/qssl
