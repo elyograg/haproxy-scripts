@@ -1,0 +1,84 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+source "${SCRIPT_DIR}/functions.sh"
+WOLFSSL_SRC_DIR="${SCRIPT_DIR}/$1"
+MAKE_COUNT="$(make_cpu_count)"
+
+add_bin_to_path() {
+  if [ -d /opt/wolfssl/lib64 ]; then
+    WOLFSSL_LIB=/opt/wolfssl/lib64
+  else
+    WOLFSSL_LIB=/opt/wolfssl/lib
+  fi
+  rm -f /usr/local/bin/qssl
+  cat << EOF > /usr/local/bin/qssl
+#!/bin/sh
+LD_LIBRARY_PATH=${WOLFSSL_LIB}
+export LD_LIBRARY_PATH
+/opt/wolfssl/bin/openssl \$*
+EOF
+  chmod +x /usr/local/bin/qssl
+}
+
+do_git_update() {
+  git pull --rebase
+  git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+  git pull --rebase
+}
+
+#CONFARGS="--prefix=/opt/wolfssl enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
+#CONFARGS="--prefix=/opt/wolfssl enable-tls1_3 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
+CONFARGS="--prefix=/opt/wolfssl --with-gas"
+
+#if [ "$(uname -i)" == "x86_64" ]; then
+#  CONFARGS="${CONFARGS} enable-ec_nistp_64_gcc_128"
+#fi
+
+if [ -z "$1" ]; then
+  die "Command needs an argument, the subdirectory with wolfssl source"
+fi
+
+if [ -e "${WOLFSSL_SRC_DIR}" ]; then
+  if [ -d "${WOLFSSL_SRC_DIR}" ]; then
+    cd ${WOLFSSL_SRC_DIR} || die "Unable to cd to ${WOLFSSL_SRC_DIR}"
+    info "Updating wolfssl repo"
+    sudo -E bash -c "$(declare -f do_git_update); do_git_update"
+    info "Cleaning wolfssl repo"
+    sudo -E make -s distclean > /dev/null
+    info "Running autogen"
+    sudo -E ./autogen.sh > /dev/null
+    info "Configuring wolfssl"
+    sudo -E ./configure ${CONFARGS}
+    RETVAL="$?"
+    if [ "$RETVAL" -eq 0 ]; then
+      info "Building wolfssl, may take a few minutes"
+      info "Using ${MAKE_COUNT} threads with make"
+      sudo -E make -s -j ${MAKE_COUNT}
+      RETVAL="$?"
+      if [ "$RETVAL" -eq 0 ]; then
+        sudo -E rm -rf /opt/old.wolfssl
+        sudo -E mv /opt/wolfssl /opt/old.wolfssl
+        info "Installing wolfssl"
+        sudo -E make -s install > /dev/null
+        RETVAL="$?"
+        if [ "$RETVAL" -eq 0 ]; then
+          sudo -E bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
+          sudo -E rm -rf /opt/wolfssl/ssl/certs
+          sudo -E ln -s /etc/ssl/certs /opt/wolfssl/ssl/certs
+          sudo -E make -s distclean > /dev/null
+        else
+          die "Install failed!"
+        fi
+      else
+        die "Build failed!"
+      fi
+    else
+      die "Configure failed!"
+    fi
+  else
+    die "location (${WOLFSSL_SRC_DIR}) is not a directory."
+  fi
+else
+  die "location (${WOLFSSL_SRC_DIR}) does not exist."
+fi
