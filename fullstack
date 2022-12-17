@@ -10,13 +10,12 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
     info "Full hostname contains elyograg."
     if [[ "$(hostname)" != *"smeagol"* ]]; then
-      info "Hostname does not contain smeagol."
       warn "Syncing from smeagol"
-      ./sync_from_smeagol
+      ./sync_from_smeagol 2>&1
     fi
   fi
-  sudo -E git pull --rebase
+  sudo -E git pull --rebase 2>&1
 fi
 
-./new-quic git-quictls
-./new-haproxy git-haproxy-2.7
+./new-quic git-quictls 2>&1
+./new-haproxy git-haproxy-2.7 2>&1

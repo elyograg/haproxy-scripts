@@ -22,9 +22,9 @@ EOF
 }
 
 do_git_update() {
-  git pull --rebase
-  git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
-  git pull --rebase
+  git pull --rebase 2>&1
+  git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)" 2>&1
+  git pull --rebase 2>&1
 }
 
 #CONFARGS="--prefix=/opt/wolfssl enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
@@ -45,9 +45,9 @@ if [ -e "${WOLFSSL_SRC_DIR}" ]; then
     info "Updating wolfssl repo"
     sudo -E bash -c "$(declare -f do_git_update); do_git_update"
     info "Cleaning wolfssl repo"
-    sudo -E make -s distclean > /dev/null
+    sudo -E make -s distclean
     info "Running autogen"
-    sudo -E ./autogen.sh > /dev/null
+    sudo -E ./autogen.sh
     info "Configuring wolfssl"
     sudo -E ./configure ${CONFARGS}
     RETVAL="$?"
@@ -60,13 +60,13 @@ if [ -e "${WOLFSSL_SRC_DIR}" ]; then
         sudo -E rm -rf /opt/old.wolfssl
         sudo -E mv /opt/wolfssl /opt/old.wolfssl
         info "Installing wolfssl"
-        sudo -E make -s install > /dev/null
+        sudo -E make -s install
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then
           sudo -E bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
           sudo -E rm -rf /opt/wolfssl/ssl/certs
           sudo -E ln -s /etc/ssl/certs /opt/wolfssl/ssl/certs
-          sudo -E make -s distclean > /dev/null
+          sudo -E make -s distclean
         else
           die "Install failed!"
         fi

@@ -19,8 +19,8 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
   if [ -d "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
     info "Haproxy repo maintenance"
-    sudo -E make -s clean && > /dev/null
-    sudo -E git pull --rebase
+    sudo -E make -s clean
+    sudo -E git pull --rebase 2>&1
     info "Building haproxy"
     info "Using ${MAKE_COUNT} threads with make"
     sudo -E make -s -j${MAKE_COUNT} TARGET=linux-glibc \

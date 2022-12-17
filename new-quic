@@ -22,10 +22,10 @@ EOF
 }
 
 do_git_update() {
-  git pull --rebase
+  git pull --rebase 2>&1
   #git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
-  git checkout "$(git remote show origin | grep "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')"
-  git pull --rebase
+  git checkout "$(git remote show origin | grep "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')" 2>&1
+  git pull --rebase 2>&1
 }
 
 #CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
@@ -45,7 +45,7 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     info "Updating quictls repo"
     sudo -E bash -c "$(declare -f do_git_update); do_git_update"
     info "Cleaning quictls repo"
-    sudo -E make -s distclean > /dev/null
+    sudo -E make -s distclean
     info "Configuring quictls"
     sudo -E ./config ${CONFARGS}
     RETVAL="$?"
@@ -58,13 +58,13 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
         sudo -E rm -rf /opt/old.quictls
         sudo -E mv /opt/quictls /opt/old.quictls
         info "Installing quictls"
-        sudo -E make -s install_sw install_ssldirs > /dev/null
+        sudo -E make -s install_sw install_ssldirs
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then
           sudo -E bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
           sudo -E rm -rf /opt/quictls/ssl/certs
           sudo -E ln -s /etc/ssl/certs /opt/quictls/ssl/certs
-          sudo -E make -s distclean > /dev/null
+          sudo -E make -s distclean
         else
           die "Install failed!"
         fi
