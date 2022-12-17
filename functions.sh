@@ -36,7 +36,6 @@ make_cpu_count() {
 
   # Don't mess with the line below.  Took half an hour to get it right.
   MAKE_COUNT="$(round $(echo "scale=2 ; (${COUNT} / 2)" | bc) 0)"
-  ((MAKE_COUNT=COUNT/3))
   if [ "${MAKE_COUNT}" -lt 2 ]; then
     MAKE_COUNT=2
   fi
