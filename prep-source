@@ -21,9 +21,9 @@ else
   sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
   sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
   sudo -E /usr/bin/apt -y update
+  sudo -E /usr/bin/apt -y install build-essential git zlib1g-dev
   sudo -E /usr/bin/apt -y build-dep haproxy
   sudo -E /usr/bin/apt -y build-dep openssl
-  sudo -E /usr/bin/apt -y install build-essential git zlib1g-dev
 fi
 
 sudo -E rm -rf old.git-haproxy-2.7 > /dev/null
