@@ -21,26 +21,21 @@ die() {
   exit 1
 }
 
-CPUCOUNT_RECURSIVE=0
+round() {
+  echo $(printf %.$2f $(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc))
+}
+
 make_cpu_count() {
   local COUNT;
   local MAKE_COUNT;
   COUNT=$(python -c "import psutil; print(psutil.cpu_count(logical=False))")
   RET="$?"
-  if [ "${CPUCOUNT_RECURSIVE}" -eq 0 ]; then
-    if [ "${RET}" -ne 0 ]; then
-      sudo -E apt -y install python3-psutil python-is-python3 > /dev/null 2>/dev/null
-      CPUCOUNT_RECURSIVE=1
-      make_cpu_count
-      RET="$?"
-      return "${RET}"
-    fi
-  else
-    if [ "${RET}" -ne 0 ]; then
-      die "GETTING CPU COUNT FAILED."
-    fi
+  if [ "${RET}" -ne 0 ]; then
+    die "GETTING CPU COUNT FAILED."
   fi
 
+  # Don't mess with the line below.  Took half an hour to get it right.
+  MAKE_COUNT="$(round $(echo "scale=2 ; (${COUNT} / 2)" | bc) 0)"
   ((MAKE_COUNT=COUNT/3))
   if [ "${MAKE_COUNT}" -lt 2 ]; then
     MAKE_COUNT=2

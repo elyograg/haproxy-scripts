@@ -13,15 +13,16 @@ if [ -f /etc/redhat-release ]; then
     gcc gcc-c++ gettext libtool make patch pkgconfig \
     redhat-rpm-config rpm-build rpm-sign byacc cscope ctags \
     diffstat doxygen elfutils gcc-gfortran git indent \
-    intltool patchutils rcs subversion swig systemtap \
+    intltool patchutils rcs subversion swig systemtap python3 \
 
   # blank line above is intentional
+  sudo -E alternatives --set python /usr/bin/python3
 else
   info "Trying debian/ubuntu commands"
   sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
   sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
   sudo -E /usr/bin/apt -y update
-  sudo -E /usr/bin/apt -y install build-essential git zlib1g-dev
+  sudo -E /usr/bin/apt -y install build-essential git zlib1g-dev python3-psutil python-is-python3
   sudo -E /usr/bin/apt -y build-dep haproxy
   sudo -E /usr/bin/apt -y build-dep openssl
 fi
