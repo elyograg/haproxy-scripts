@@ -43,7 +43,10 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
     info "Updating quictls repo"
-    sudo -E bash -c "$(declare -f do_git_update); do_git_update"
+    sudo -E git pull --rebase 2>&1
+    #sudo -E git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+    sudo -E git checkout "$(git remote show origin | grep "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')" 2>&1
+    sudo -E git pull --rebase 2>&1
     info "Cleaning quictls repo"
     sudo -E make -s distclean
     info "Configuring quictls"
