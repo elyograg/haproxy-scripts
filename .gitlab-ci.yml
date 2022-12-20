@@ -31,5 +31,6 @@ build_and_test:
       echo "${FOUND_STRING}"
       if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
         echo "Found string does not match expected string!"
+        echo "This should never happen!"
         exit 1
       fi
