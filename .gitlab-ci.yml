@@ -29,6 +29,6 @@ build_and_test:
       FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3}"
       echo "${FOUND_STRING}"
       if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
-        echo "Found string doesn't match expected string!"
+        echo "Found string does not match expected string!"
         exit 1
       fi
