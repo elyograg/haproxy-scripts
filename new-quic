@@ -1,6 +1,7 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" || { echo "Can't CD to $0 ... this should not happen." ; exit 1 ; } ; pwd -P)"
+# shellcheck source=/dev/null
 source "${SCRIPT_DIR}/functions.sh"
 QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"
 MAKE_COUNT="$(make_cpu_count)"
@@ -21,13 +22,6 @@ EOF
   chmod +x /usr/local/bin/qssl
 }
 
-do_git_update() {
-  git pull --rebase 2>&1
-  #git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
-  git checkout "$(git remote show origin | grep "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')" 2>&1
-  git pull --rebase 2>&1
-}
-
 #CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 CONFARGS="--prefix=/opt/quictls enable-tls1_3 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 
@@ -41,21 +35,24 @@ fi
 
 if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
-    cd ${QUICTLS_SRC_DIR} || die "Unable to cd to ${QUICTLS_SRC_DIR}"
+    cd "${QUICTLS_SRC_DIR}" || die "Unable to cd to ${QUICTLS_SRC_DIR}"
     info "Updating quictls repo"
     sudo -E git pull --rebase 2>&1
-    #sudo -E git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
-    sudo -E git checkout "$(git remote show origin | grep "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')" 2>&1
+    #sudo -E git checkout "$(sudo -E git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+    NEW_BRANCH="$(sudo -E git remote show origin | grep -Ew "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')"
+    info "Changing branch to '${NEW_BRANCH}'"
+    sudo -E git checkout "${NEW_BRANCH}" 2>&1
+    info "Updating quictls repo"
     sudo -E git pull --rebase 2>&1
     info "Cleaning quictls repo"
     sudo -E make -s distclean
     info "Configuring quictls"
-    sudo -E ./config ${CONFARGS}
+    sudo -E ./config "${CONFARGS}"
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
       info "Building quictls, may take a few minutes"
       info "Using ${MAKE_COUNT} threads with make"
-      sudo -E make -s -j ${MAKE_COUNT}
+      sudo -E make -s -j "${MAKE_COUNT}"
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo -E rm -rf /opt/old.quictls
