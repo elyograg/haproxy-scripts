@@ -23,10 +23,10 @@ EOF
 }
 
 #CONFARGS="--prefix=/opt/quictls enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
-CONFARGS="enable-tls1_3 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads --prefix=/opt/quictls"
+CONFARGS="enable-tls1_3 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 
 if [ "$(uname -i)" == "x86_64" ]; then
-  CONFARGS="enable-ec_nistp_64_gcc_128 ${CONFARGS}"
+  CONFARGS="${CONFARGS} enable-ec_nistp_64_gcc_128"
 fi
 
 if [ -z "$1" ]; then
@@ -47,7 +47,8 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     info "Cleaning quictls repo"
     sudo -E make -s distclean
     info "Configuring quictls"
-    sudo -E ./config "${CONFARGS}"
+    # shellcheck disable=SC2086
+    sudo -E ./config --prefix="/opt/quictls" ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
       info "Building quictls, may take a few minutes"
