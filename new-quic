@@ -1,6 +1,10 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" || { echo "Can't CD to $0 ... this should not happen." ; exit 1 ; } ; pwd -P)"
+if [ -f "${SCRIPT_DIR}/repo_overrides" ]; then
+  # shellcheck source=/dev/null
+  source "${SCRIPT_DIR}/repo_overrides"
+fi
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/functions.sh"
 QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"

@@ -1,7 +1,12 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+# shellcheck source=/dev/null
 source "${SCRIPT_DIR}/functions.sh"
+if [ -f "${SCRIPT_DIR}/repo_overrides" ]; then
+  # shellcheck source=/dev/null
+  source "${SCRIPT_DIR}/repo_overrides"
+fi
 HAPROXY_SRC_DIR="${SCRIPT_DIR}/$1"
 MAKE_COUNT="$(make_cpu_count)"
 
