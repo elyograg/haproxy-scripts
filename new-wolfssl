@@ -11,14 +11,14 @@ add_bin_to_path() {
   else
     WOLFSSL_LIB=/opt/wolfssl/lib
   fi
-  rm -f /usr/local/bin/qssl
+  rm -f /usr/local/bin/wssl
   cat << EOF > /usr/local/bin/qssl
 #!/bin/sh
 LD_LIBRARY_PATH=${WOLFSSL_LIB}
 export LD_LIBRARY_PATH
 /opt/wolfssl/bin/openssl \$*
 EOF
-  chmod +x /usr/local/bin/qssl
+  chmod +x /usr/local/bin/wssl
 }
 
 do_git_update() {
@@ -27,13 +27,7 @@ do_git_update() {
   git pull --rebase 2>&1
 }
 
-#CONFARGS="--prefix=/opt/wolfssl enable-tls1_3 enable-ktls enable-fips no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
-#CONFARGS="--prefix=/opt/wolfssl enable-tls1_3 no-idea no-mdc2 no-rc5 no-zlib no-ssl3 enable-unit-test no-ssl3-method enable-rfc3779 enable-cms no-capieng threads"
 CONFARGS="--prefix=/opt/wolfssl --with-gas"
-
-#if [ "$(uname -i)" == "x86_64" ]; then
-#  CONFARGS="${CONFARGS} enable-ec_nistp_64_gcc_128"
-#fi
 
 if [ -z "$1" ]; then
   die "Command needs an argument, the subdirectory with wolfssl source"

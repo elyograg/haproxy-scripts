@@ -7,7 +7,13 @@ if [ -f "${SCRIPT_DIR}/repo_overrides" ]; then
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/repo_overrides"
 fi
-HAPROXY_SRC_DIR="${SCRIPT_DIR}/$1"
+
+if [ -n "${HAPROXY_OVERRIDE}" ]; then
+  HAPROXY_SRC_DIR="${SCRIPT_DIR}/${HAPROXY_OVERRIDE}"
+else
+  HAPROXY_SRC_DIR="${SCRIPT_DIR}/$1"
+fi
+
 MAKE_COUNT="$(make_cpu_count)"
 
 if [ -d /opt/quictls/lib64 ]; then

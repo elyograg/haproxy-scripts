@@ -18,4 +18,4 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
 fi
 
 ./new-quic git-quictls 2>&1
-./new-haproxy git-haproxy-2.7 2>&1
+./new-haproxy git-haproxy-master 2>&1
