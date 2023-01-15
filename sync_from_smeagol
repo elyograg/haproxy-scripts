@@ -1,6 +1,7 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(cd "$(dirname $0)";pwd -P)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
+# shellcheck source=/dev/null
 source "${SCRIPT_DIR}/functions.sh"
 
 REM_HOST="$1"

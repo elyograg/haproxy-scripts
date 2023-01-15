@@ -4,10 +4,10 @@ err() {
   echo "E: $*" >>/dev/stderr
 }
 
-DIR=`dirname $0`/$1/admin/systemd
+DIR=$(dirname "$0")/"$1"/admin/systemd
 if [ -e "$DIR" ]; then
   if [ -d "$DIR" ]; then
-    cd ${DIR}
+    cd "${DIR}" || exit
     sudo -E make clean haproxy.service
     sudo -E cp haproxy.service /etc/systemd/system/.
     sudo -E systemctl daemon-reload

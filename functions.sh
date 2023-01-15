@@ -22,7 +22,7 @@ die() {
 }
 
 round() {
-  echo $(printf %.$2f $(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc))
+  printf "%.$2f" "$(echo "scale=$2;(((10^$2)*$1)+0.5)/(10^$2)" | bc)"
 }
 
 make_cpu_count() {
@@ -34,8 +34,8 @@ make_cpu_count() {
     die "GETTING CPU COUNT FAILED."
   fi
 
-  # Don't mess with the line below.  Took half an hour to get it right.
-  MAKE_COUNT="$(round $(echo "scale=2 ; (${COUNT} / 2)" | bc) 0)"
+  # Don't mess with the line below.  Took FOREVER to get it right.
+  MAKE_COUNT="$(round "$(echo "scale=2 ; (${COUNT} / 2)" | bc)" 0)"
   if [ "${MAKE_COUNT}" -lt 2 ]; then
     MAKE_COUNT=2
   fi
