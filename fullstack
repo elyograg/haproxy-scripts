@@ -9,10 +9,11 @@ info "CI branch: ${CI_COMMIT_REF_NAME}"
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   echo "NOT doing CI."
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
-    info "Full hostname contains elyograg."
     if [[ "$(hostname)" != *"smeagol"* ]]; then
-      warn "Syncing from smeagol"
+      warn "Syncing from smeagol.elyograg.org"
       ./sync_from_smeagol 2>&1
+    else
+      info "This host IS smeagol.  Skipping sync."
     fi
   fi
   sudo -E git pull --rebase 2>&1
