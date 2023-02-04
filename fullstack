@@ -18,20 +18,7 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   else
     echo "This host is not in the elyograg.org namespace.  Skipping sync"
   fi
-  echo "Fetching from the haproxy-scripts repo"
-  sudo -E git fetch --all 2>&1
-  RET="$?"
-  if ["${RET}" -ne 0 ]; then
-    echo "Error fetching, aborting"
-    exit 1
-  else
-    sudo -E git pull --rebase 2>&1
-    RET="$?"
-    if ["${RET}" -ne 0 ]; then
-      echo "Error pulling, aborting"
-      exit 1
-    fi
-  fi
+  fetch_from_git "haproxy-scripts"
 fi
 
 ./new-quic git-quictls 2>&1
