@@ -34,7 +34,4 @@ sudo -E git clone -v https://git.haproxy.org/git/haproxy.git git-haproxy-master 
 sudo -E rm -rf old.git-quictls > /dev/null
 sudo -E mv git-quictls old.git-quictls
 sudo -E git clone -v https://github.com/quictls/openssl.git git-quictls 2>&1
-#sudo -E rm -rf old.git-wolfssl > /dev/null
-#sudo -E mv git-wolfssl old.git-wolfssl
-#sudo -E git clone -v https://github.com/wolfSSL/wolfssl.git git-wolfssl 2>&1
 true
