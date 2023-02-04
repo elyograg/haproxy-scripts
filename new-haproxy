@@ -31,7 +31,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
     info "Haproxy repo maintenance"
     sudo -E make -s clean
-    sudo -E git pull --rebase 2>&1
+    fetch_from_git "haproxy"
     info "Building haproxy"
     info "Using ${MAKE_COUNT} threads with make"
     sudo -E make -s "-j${MAKE_COUNT}" TARGET=linux-glibc \
@@ -44,6 +44,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
       SSL_INC=/opt/quictls/include \
       SSL_LIB=$QUICTLS_LIB \
       LDFLAGS="-Wl,-rpath,$QUICTLS_LIB" \
+      # The DEBUG environment variable is used by the makefile
       DEBUG=" " \
 
 # blank line above intentional

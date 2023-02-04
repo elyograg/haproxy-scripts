@@ -43,3 +43,21 @@ make_cpu_count() {
   echo "${MAKE_COUNT}"
   return "${RET}"
 }
+
+fetch_from_git() {
+  REPO_NAME=$1
+  shift
+
+  echo "Fetching ${REPO_NAME} from git"
+  sudo -E git fetch --all 2>&1
+  RET="$?"
+  if ["${RET}" -ne 0 ]; then
+    die "Error fetching, aborting"
+  else
+    sudo -E git pull --rebase 2>&1
+    RET="$?"
+    if ["${RET}" -ne 0 ]; then
+      die "Error pulling, aborting"
+    fi
+  fi
+}

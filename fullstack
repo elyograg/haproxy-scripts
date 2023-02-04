@@ -7,16 +7,31 @@ source "${SCRIPT_DIR}/functions.sh"
 info "Starting fullstack script"
 info "CI branch: ${CI_COMMIT_REF_NAME}"
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
-  echo "NOT doing CI."
+  echo "NOT doing CI"
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
     if [[ "$(hostname)" != *"smeagol"* ]]; then
       warn "Syncing from smeagol.elyograg.org"
       ./sync_from_smeagol 2>&1
     else
-      info "This host IS smeagol.  Skipping sync."
+      info "This host IS smeagol.  Skipping sync"
+    fi
+  else
+    echo "This host is not in the elyograg.org namespace.  Skipping sync"
+  fi
+  echo "Fetching from the haproxy-scripts repo"
+  sudo -E git fetch --all 2>&1
+  RET="$?"
+  if ["${RET}" -ne 0 ]; then
+    echo "Error fetching, aborting"
+    exit 1
+  else
+    sudo -E git pull --rebase 2>&1
+    RET="$?"
+    if ["${RET}" -ne 0 ]; then
+      echo "Error pulling, aborting"
+      exit 1
     fi
   fi
-  sudo -E git pull --rebase 2>&1
 fi
 
 ./new-quic git-quictls 2>&1
