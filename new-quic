@@ -42,7 +42,7 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     cd "${QUICTLS_SRC_DIR}" || die "Unable to cd to ${QUICTLS_SRC_DIR}"
     fetch_from_git "quictls"
     #sudo -E git checkout "$(sudo -E git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
-    NEW_BRANCH="$(sudo -E git remote show origin | grep -Ew "OpenSSL_1.*quic" | tail -n1 | awk '{print $1}')"
+    NEW_BRANCH="$(sudo -E git remote show origin | grep -Ew "OpenSSL_1.*quic" | sort | tail -n1 | awk '{print $1}')"
     info "Changing branch to '${NEW_BRANCH}'"
     sudo -E git checkout "${NEW_BRANCH}" 2>&1
     fetch_from_git "quictls"
