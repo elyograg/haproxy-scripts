@@ -12,7 +12,7 @@ build_and_test:
     - sudo -E rm -rf /var/www/html/test_file
     - sudo -E ./prep-source
     - systemctl status docker && DOCKERSVC=true
-    - if [ -n "${DOCKERSVC}" ]; then
+    - if [ -z "${DOCKERSVC}" ]; then
     -   if [ -f /etc/redhat-release ]; then
     -     sudo -E yum -y install docker
     -     sudo -E service docker restart
