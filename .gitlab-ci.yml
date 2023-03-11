@@ -11,11 +11,14 @@ build_and_test:
     - sudo -E mkdir -p /etc/haproxy
     - sudo -E rm -rf /var/www/html/test_file
     - sudo -E ./prep-source
-    - if [ -f /etc/redhat-release ]; then
-    -   sudo -E yum -y install docker
-    -   sudo -E service docker restart
-    - else
-    -   sudo -E apt -y install docker.io
+    - systemctl status docker && DOCKERSVC=true
+    - if [ -n "${DOCKERSVC}"
+    -   if [ -f /etc/redhat-release ]; then
+    -     sudo -E yum -y install docker
+    -     sudo -E service docker restart
+    -   else
+    -     sudo -E apt -y install docker.io
+    -   fi
     - fi
     - sudo -E ./install-haproxy-service git-haproxy-2.7
     - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
