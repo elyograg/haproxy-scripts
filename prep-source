@@ -2,7 +2,7 @@
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
 # shellcheck source=/dev/null
-source "${SCRIPT_DIR}/functions.sh"
+source "${SCRIPT_DIR}/common-functions.sh"
 cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}.  This is weird."
 
 if [ -f /etc/redhat-release ]; then

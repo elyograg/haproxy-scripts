@@ -6,7 +6,7 @@ if [ -f "${SCRIPT_DIR}/repo_overrides" ]; then
   source "${SCRIPT_DIR}/repo_overrides"
 fi
 # shellcheck source=/dev/null
-source "${SCRIPT_DIR}/functions.sh"
+source "${SCRIPT_DIR}/common-functions.sh"
 QUICTLS_SRC_DIR="${SCRIPT_DIR}/$1"
 MAKE_COUNT="$(make_cpu_count)"
 
