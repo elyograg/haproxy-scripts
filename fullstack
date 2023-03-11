@@ -12,7 +12,7 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
     if [[ "$(hostname)" != *"smeagol"* ]]; then
       warn "Syncing from smeagol.elyograg.org"
-      ./sync_from_smeagol 2>&1
+      ./sync_from_creator 2>&1
     else
       info "This host IS smeagol.  Skipping sync"
     fi
