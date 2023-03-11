@@ -4,6 +4,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/common-functions.sh"
 
+start_time="$(date -u +%s)"
 info "Starting fullstack script"
 info "CI branch: ${CI_COMMIT_REF_NAME}"
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
@@ -20,6 +21,20 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   fi
   fetch_from_git "haproxy-scripts"
 fi
+end_time="$(date -u +%s)"
+sync_elapsed="$(($end_time-$start_time))"
 
+start_time="$(date -u +%s)"
 ./new-quic git-quictls 2>&1
+end_time="$(date -u +%s)"
+quictls_elapsed="$(($end_time-$start_time))"
+
+start_time="$(date -u +%s)"
 ./new-haproxy git-haproxy-master 2>&1
+end_time="$(date -u +%s)"
+haproxy_elapsed="$(($end_time-$start_time))"
+
+echo
+echo "seconds for sync   : ${sync_elapsed}"
+echo "seconds for guictls: ${quictls_elapsed}"
+echo "seconds for haproxy: ${haproxy_elapsed}"
