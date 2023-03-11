@@ -19,7 +19,7 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   else
     echo "This host is not in the elyograg.org namespace.  Skipping sync"
   fi
-  fetch_from_git "haproxy-scripts"
+  fetch_myself_from_git
 fi
 end_time="$(date -u +%s)"
 sync_elapsed="$(($end_time-$start_time))"
@@ -35,6 +35,6 @@ end_time="$(date -u +%s)"
 haproxy_elapsed="$(($end_time-$start_time))"
 
 echo
-echo "seconds for sync   : ${sync_elapsed}"
-echo "seconds for guictls: ${quictls_elapsed}"
-echo "seconds for haproxy: ${haproxy_elapsed}"
+echo "seconds for sync         : ${sync_elapsed}"
+echo "seconds for quictls clone: ${quictls_elapsed}"
+echo "seconds for haproxy clone: ${haproxy_elapsed}"
