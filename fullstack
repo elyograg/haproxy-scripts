@@ -36,5 +36,5 @@ haproxy_elapsed="$(($end_time-$start_time))"
 
 echo
 echo "seconds for sync         : ${sync_elapsed}"
-echo "seconds for quictls clone: ${quictls_elapsed}"
-echo "seconds for haproxy clone: ${haproxy_elapsed}"
+echo "seconds for quictls build: ${quictls_elapsed}"
+echo "seconds for haproxy build: ${haproxy_elapsed}"

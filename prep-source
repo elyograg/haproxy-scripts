@@ -28,10 +28,10 @@ else
   sudo -E /usr/bin/apt -y build-dep openssl
 fi
 
-sudo -E rm -rf git-haproxy-2.7 old.git-haproxy-2.7 old-git-haproxy-master > /dev/null
-sudo -E mv git-haproxy-master old.git-haproxy-master
-sudo -E git clone -v https://git.haproxy.org/git/haproxy.git git-haproxy-master 2>&1
-sudo -E rm -rf old.git-quictls > /dev/null
-sudo -E mv git-quictls old.git-quictls
+sudo -E rm -rf old.git-quictls git-quictls > /dev/null
+echo "Fresh clone of quictls"
 sudo -E git clone -v https://github.com/quictls/openssl.git git-quictls 2>&1
+sudo -E rm -rf git-haproxy-2.7 git-haproxy-master old.git-haproxy-2.7 old-git-haproxy-master > /dev/null
+echo "Fresh clone of haproxy master repo"
+sudo -E git clone -v https://git.haproxy.org/git/haproxy.git git-haproxy-master 2>&1
 true
