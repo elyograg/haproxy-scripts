@@ -43,24 +43,24 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     fetch_from_git "quictls"
     #sudo -E git checkout "$(sudo -E git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
     NEW_BRANCH="$(sudo -E git remote show origin | grep -Ew "OpenSSL_1.*quic" | sort | tail -n1 | awk '{print $1}')"
-    info "Changing branch to '${NEW_BRANCH}'"
+    log_info "Changing branch to '${NEW_BRANCH}'"
     sudo -E git checkout "${NEW_BRANCH}" 2>&1
     fetch_from_git "quictls"
-    info "Cleaning quictls repo"
+    log_info "Cleaning quictls repo"
     sudo -E make -s distclean
-    info "Configuring quictls"
+    log_info "Configuring quictls"
     # shellcheck disable=SC2086
     sudo -E ./config --prefix="/opt/quictls" ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      info "Building quictls, may take a few minutes"
-      info "Using ${MAKE_COUNT} threads with make"
+      log_info "Building quictls, may take a few minutes"
+      log_info "Using ${MAKE_COUNT} threads with make"
       sudo -E make -s -j "${MAKE_COUNT}"
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
         sudo -E rm -rf /opt/old.quictls
         sudo -E mv /opt/quictls /opt/old.quictls
-        info "Installing quictls"
+        log_info "Installing quictls"
         sudo -E make -s install_sw install_ssldirs
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then

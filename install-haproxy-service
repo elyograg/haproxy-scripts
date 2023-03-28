@@ -1,8 +1,8 @@
 #!/bin/bash
 
-err() {
-  echo "E: $*" >>/dev/stderr
-}
+SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
+# shellcheck source=./common-functions.sh
+source "${SCRIPT_DIR}/common-functions.sh"
 
 DIR=$(dirname "$0")/"$1"/admin/systemd
 if [ -e "$DIR" ]; then
@@ -13,8 +13,8 @@ if [ -e "$DIR" ]; then
     sudo -E systemctl daemon-reload
     sudo -E systemctl enable haproxy
   else
-    err "location ($DIR) is not a directory."
+    log_err "location ($DIR) is not a directory."
   fi
 else
-  err "location ($DIR) does not exist."
+  log_err "location ($DIR) does not exist."
 fi

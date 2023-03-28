@@ -5,16 +5,16 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
 source "${SCRIPT_DIR}/common-functions.sh"
 
 start_time="$(date -u +%s)"
-info "Starting fullstack script"
-info "CI branch: ${CI_COMMIT_REF_NAME}"
+log_info "Starting fullstack script"
+log_info "CI branch: ${CI_COMMIT_REF_NAME}"
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   echo "NOT doing CI"
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
     if [[ "$(hostname)" != *"smeagol"* ]]; then
-      warn "Syncing from smeagol.elyograg.org"
+      log_warn "Syncing from smeagol.elyograg.org"
       ./sync_from_creator 2>&1
     else
-      info "This host IS smeagol.  Skipping sync"
+      log_info "This host IS smeagol.  Skipping sync"
     fi
   else
     echo "This host is not in the elyograg.org namespace.  Skipping sync"

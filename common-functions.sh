@@ -4,20 +4,20 @@ get_timestamp() {
   date "+%4Y-%m-%dT%H:%M:%S"
 }
 
-info() {
+log_info() {
   echo -e "I $(get_timestamp): $*"
 }
 
-warn() {
+log_warn() {
   echo -e "W $(get_timestamp): $*"
 }
 
-err() {
+log_err() {
   echo -e "E $(get_timestamp): $*" >>/dev/stderr
 }
 
 die() {
-  err "$*"
+  log_err "$*"
   exit 1
 }
 
@@ -47,7 +47,6 @@ make_cpu_count() {
 fetch_from_git() {
   REPO_NAME="$1"
   shift
-
   echo "Fetching ${REPO_NAME} from git"
   sudo -E git fetch --all 2>&1
   RET="$?"

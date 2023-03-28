@@ -3,10 +3,10 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/common-functions.sh"
-cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}.  This is weird."
+cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}!  This is weird."
 
 if [ -f /etc/redhat-release ]; then
-  info "Trying redhat commands"
+  log_info "Trying redhat commands"
   sudo -E yum -y makecache
   sudo -E yum -y install \
     perl-IPC-Cmd perl-Digest-SHA openssl-devel zlib-devel pcre2-devel \
@@ -19,7 +19,7 @@ if [ -f /etc/redhat-release ]; then
   # blank line above is intentional
   sudo -E alternatives --set python /usr/bin/python3
 else
-  info "Trying debian/ubuntu commands"
+  log_info "Trying debian/ubuntu commands"
   sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
   sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
   sudo -E /usr/bin/apt -y update

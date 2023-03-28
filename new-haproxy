@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
-# shellcheck source=/dev/null
+# shellcheck source=./common-functions.sh
 source "${SCRIPT_DIR}/common-functions.sh"
 if [ -f "${SCRIPT_DIR}/repo_overrides" ]; then
   # shellcheck source=/dev/null
@@ -29,11 +29,11 @@ fi
 if [ -e "${HAPROXY_SRC_DIR}" ]; then
   if [ -d "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
-    info "Haproxy repo maintenance"
+    log_info "Haproxy repo maintenance"
     sudo -E make -s clean
     fetch_from_git "haproxy"
-    info "Building haproxy"
-    info "Using ${MAKE_COUNT} threads with make"
+    log_info "Building haproxy"
+    log_info "Using ${MAKE_COUNT} threads with make"
     sudo -E make -s "-j${MAKE_COUNT}" TARGET=linux-glibc \
       USE_PCRE2_JIT=1 \
       USE_OPENSSL=1 \
@@ -51,15 +51,15 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
 #      DEBUG="-DDEBUG_H3 -DDEBUG_QPACK" \
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
-      info "Installing haproxy"
+      log_info "Installing haproxy"
       sudo -E make -s install > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -ne 0 ]; then
         die "Install failed!"
       fi
-      info "Cleaning haproxy repo"
+      log_info "Cleaning haproxy repo"
       sudo -E make -s clean > /dev/null
-      info "Restarting haproxy"
+      log_info "Restarting haproxy"
       sudo -E service haproxy restart
     else
       die "Build failed!"
