@@ -1,6 +1,13 @@
 #!/bin/bash
 
+BADCD=""
 SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
+cd "${SCRIPT_DIR}" || BADCD="true"
+if [ -n "${BADCD}" ]; then
+  echo "couldn't cd to ${SCRIPT_DIR}"
+  exit 1
+fi
+
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/common-functions.sh"
 
@@ -9,4 +16,4 @@ if [ -z "$REM_HOST" ]; then
   REM_HOST=smeagol.elyograg.org
 fi
 
-sudo -E rsync -avcHP --delete $REM_HOST:/usr/local/src/ /usr/local/src/
+sudo -E rsync -avcHP --delete $REM_HOST:/storage0/build/haproxy/ ./
