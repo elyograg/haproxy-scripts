@@ -19,3 +19,4 @@ It will then start haproxy, write a test string to the webroot, and retrieve
 that string.  The CI script pushes a test string that includes the git commit
 hash, and checks that it pulls the same string, and displays both strings.
 If they don't match, the CI job fails.
+
