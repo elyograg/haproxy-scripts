@@ -26,6 +26,7 @@ if [ -z "$1" ]; then
   die "Command needs an argument, the subdirectory with haproxy source"
 fi
 
+log_info "- Beginning pull/build of haproxy"
 if [ -e "${HAPROXY_SRC_DIR}" ]; then
   if [ -d "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
