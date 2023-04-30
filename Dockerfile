@@ -1,6 +1,6 @@
 FROM robertdebock/ubuntu
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 docker.io rsync sudo apt-utils
-RUN apt-get clean 
+RUN apt-get clean
 RUN ls -al /etc/apache2/sites-available
 RUN mkdir -p /etc/haproxy 
 RUN mkdir -p /etc/ssl/certs/local
