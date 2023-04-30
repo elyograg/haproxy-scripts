@@ -1,0 +1,8 @@
+stages:
+  - build-and-run
+
+build-docker-image:
+  stage: build-and-run
+  script:
+    - docker info
+    - docker build -t elyograg/haproxy-scripts .
