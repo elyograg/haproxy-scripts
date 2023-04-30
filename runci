@@ -1,0 +1,13 @@
+#!/bin/bash
+TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
+echo "${TEST_STRING}" > /tmp/test_file
+cp -f /tmp/test_file /var/www/html/.
+
+FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
+echo "PUSHED '${TEST_STRING}'"
+echo "PULLED '${FOUND_STRING}'"
+if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
+  echo "Found string does not match expected string!"
+  echo "Something went wrong!"
+  exit 1
+fi
