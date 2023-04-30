@@ -1,5 +1,5 @@
-FROM ubuntu:latest
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 docker.io rsync sudo apt-utils systemd
+FROM docker-ubuntu-systemd:22.04
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 docker.io rsync sudo apt-utils
 RUN apt-get clean 
 RUN ls -al /etc/apache2/sites-available
 RUN mkdir -p /etc/haproxy 
