@@ -20,6 +20,8 @@ if [ -f /etc/redhat-release ]; then
   sudo -E alternatives --set python /usr/bin/python3
 else
   log_info "Trying debian/ubuntu commands"
+  DEBIAN_FRONTEND=noninteractive
+  export DEBIAN_FRONTEND
   sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
   sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
   sudo -E /usr/bin/apt-get -o DPkg::Options::=--force-confdef -y update
