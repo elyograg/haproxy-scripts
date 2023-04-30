@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update && apt-get install -y apache2 docker.io rysnc \
+RUN apt-get update && apt-get install -y apache2 docker.io rsync \
   && apt-get clean \
   && mkdir -p /etc/haproxy \
   && mkdir -p /usr/local/src
