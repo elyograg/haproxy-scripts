@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 docker.io rsync sudo
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 docker.io rsync sudo apt-utils systemd
 RUN apt-get clean 
 RUN ls -al /etc/apache2/sites-available
 RUN mkdir -p /etc/haproxy 
@@ -16,6 +16,9 @@ COPY prep-source /usr/local/src/haproxy-scripts/
 COPY runci /usr/local/src/haproxy-scripts/
 COPY selfsigned.pem /etc/ssl/certs/local/
 RUN rsync -avH /usr/local/src/haproxy-scripts/apache2/ /etc/apache2/
+RUN timedatectl set-timezone America/Denver
+RUN systemctl restart apache2
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y dist-upgrade
 RUN /usr/local/src/haproxy-scripts/prep-source
 RUN /usr/local/src/haproxy-scripts/install-haproxy-service git-haproxy-master
 RUN /usr/local/src/haproxy-scripts/fullstack
