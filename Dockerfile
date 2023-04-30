@@ -1,4 +1,4 @@
-FROM jrei/systemd-ubuntu
+FROM robertdebock/ubuntu
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 docker.io rsync sudo apt-utils
 RUN apt-get clean 
 RUN ls -al /etc/apache2/sites-available
