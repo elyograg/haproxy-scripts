@@ -1,8 +1,57 @@
 stages:
-  - build-and-run
+  - build_and_test
 
-build-docker-image:
-  stage: build-and-run
+build_and_test:
+  stage: build_and_test
   script:
-    - docker info
-    - docker build -t elyograg/haproxy-scripts .
+    - env > /tmp/cienv.txt
+    - sudo mkdir -p /usr/local/src/haproxy-scripts
+    - sudo -E rsync -qaH --delete ./ /usr/local/src/haproxy-scripts/
+    - cd /usr/local/src/haproxy-scripts
+    - sudo -E chown -R root:root .
+    - sudo -E mkdir -p /etc/haproxy
+    - sudo -E rm -rf /var/www/html/test_file
+    - sudo -E ./prep-source
+    - systemctl status docker && DOCKERSVC=true
+    - if [ -z "${DOCKERSVC}" ]; then
+    -   if [ -f /etc/redhat-release ]; then
+    -     sudo -E yum -y install docker
+    -     sudo -E service docker restart
+    -   else
+    -     sudo -E apt -y install docker.io
+    -   fi
+    - fi
+    - sudo -E ./install-haproxy-service git-haproxy-2.7
+    - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
+    - sudo -E ./fullstack
+    - sudo -E rm -rf /tmp/test_file
+    - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
+    - echo "${TEST_STRING}" > /tmp/test_file
+    - sudo -E cp -f /tmp/test_file /var/www/html/.
+    - |
+      FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
+      echo "PUSHED '${TEST_STRING}'"
+    -     sudo -E yum -y install docker
+    -     sudo -E service docker restart
+    -   else
+    -     sudo -E apt -y install docker.io
+    -   fi
+    - fi
+    - sudo -E ./install-haproxy-service git-haproxy-2.7
+    - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
+    - sudo -E ./fullstack
+    - sudo -E rm -rf /tmp/test_file
+    - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
+    - echo "${TEST_STRING}" > /tmp/test_file
+    - sudo -E cp -f /tmp/test_file /var/www/html/.
+    - |
+      FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
+      echo "PUSHED '${TEST_STRING}'"
+      echo "PULLED '${FOUND_STRING}'"
+      if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
+        echo "Found string does not match expected string!"
+        echo "Something went wrong!"
+        exit 1
+      fi
