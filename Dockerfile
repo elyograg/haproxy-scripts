@@ -2,7 +2,7 @@ FROM robertdebock/ubuntu
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y apache2 docker.io rsync sudo apt-utils
 RUN apt-get clean
 RUN ls -al /etc/apache2/sites-available
-RUN mkdir -p /etc/haproxy 
+RUN mkdir -p /etc/haproxy
 RUN mkdir -p /etc/ssl/certs/local
 RUN mkdir -p /usr/local/src/haproxy-scripts/apache2
 COPY apache2/ports.conf /usr/local/src/haproxy-scripts/apache2/
