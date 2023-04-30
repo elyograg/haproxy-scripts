@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-RUN apt-get update && apt-get install -y apache2 docker.io rsync
+RUN apt-get update && apt-get install -y apache2 docker.io rsync sudo
 RUN apt-get clean 
 RUN ls -al /etc/apache2/sites-available
 RUN mkdir -p /etc/haproxy 
