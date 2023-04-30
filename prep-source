@@ -22,10 +22,10 @@ else
   log_info "Trying debian/ubuntu commands"
   sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
   sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
-  sudo -E /usr/bin/apt -y update
-  sudo -E /usr/bin/apt -y install build-essential git zlib1g-dev python3-psutil python-is-python3
-  sudo -E /usr/bin/apt -y build-dep haproxy
-  sudo -E /usr/bin/apt -y build-dep openssl
+  sudo -E /usr/bin/apt-get -o DPkg::Options::=--force-confdef -y update
+  sudo -E /usr/bin/apt-get -o DPkg::Options::=--force-confdef -y install build-essential git zlib1g-dev python3-psutil python-is-python3
+  sudo -E /usr/bin/apt-get -o DPkg::Options::=--force-confdef -y build-dep haproxy
+  sudo -E /usr/bin/apt-get -o DPkg::Options::=--force-confdef -y build-dep openssl
 fi
 
 sudo -E rm -rf old.git-quictls git-quictls > /dev/null
