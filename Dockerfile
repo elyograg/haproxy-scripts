@@ -1,4 +1,4 @@
-FROM ubuntu:stable
+FROM ubuntu:latest
 RUN apt-get update && apt-get install -y apache2 docker.io \
   && apt-get clean \
   && mkdir -p /etc/haproxy \
