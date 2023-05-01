@@ -34,24 +34,6 @@ build_and_test:
     - |
       FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
       echo "PUSHED '${TEST_STRING}'"
-    -     DEBIAN_FRONTEND=noninteractive sudo -E yum -y install docker
-    -     sudo -E service docker restart
-    -   else
-    -     DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
-    -   fi
-    - fi
-    - DEBIAN_FRONTEND=noninteractive sudo -E apt-get dist-upgrade
-    - sudo -E ./install-haproxy-service git-haproxy-2.7
-    - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
-    - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
-    - sudo -E ./fullstack
-    - sudo -E rm -rf /tmp/test_file
-    - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
-    - echo "${TEST_STRING}" > /tmp/test_file
-    - sudo -E cp -f /tmp/test_file /var/www/html/.
-    - |
-      FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
-      echo "PUSHED '${TEST_STRING}'"
       echo "PULLED '${FOUND_STRING}'"
       if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
         echo "Found string does not match expected string!"
