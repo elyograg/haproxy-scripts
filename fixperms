@@ -1,0 +1,10 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
+# shellcheck source=/dev/null
+source "${SCRIPT_DIR}/common-functions.sh"
+cd "${SCRIPT_DIR}" || die "can't change to ${SCRIPT_DIR}"
+
+USER="$(stat . | grep Access | head -n1 | cut -f3 -d/ | cut -f1 -d\))"
+
+chown -R ${USER}: .

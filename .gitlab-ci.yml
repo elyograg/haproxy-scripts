@@ -15,10 +15,12 @@ build_and_test:
     - systemctl status docker && DOCKERSVC=true
     - if [ -z "${DOCKERSVC}" ]; then
     -   if [ -f /etc/redhat-release ]; then
+    -     sudo -E yum -y makecache
     -     sudo -E yum -y install docker
     -     sudo -E service docker restart
     -   else
-    -     sudo -E apt -y install docker.io
+    -     sudo -E apt-get update -y
+    -     DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
     -   fi
     - fi
     - sudo -E ./install-haproxy-service git-haproxy-2.7
@@ -32,12 +34,13 @@ build_and_test:
     - |
       FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
       echo "PUSHED '${TEST_STRING}'"
-    -     sudo -E yum -y install docker
+    -     DEBIAN_FRONTEND=noninteractive sudo -E yum -y install docker
     -     sudo -E service docker restart
     -   else
-    -     sudo -E apt -y install docker.io
+    -     DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
     -   fi
     - fi
+    - DEBIAN_FRONTEND=noninteractive sudo -E apt-get dist-upgrade
     - sudo -E ./install-haproxy-service git-haproxy-2.7
     - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
     - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
