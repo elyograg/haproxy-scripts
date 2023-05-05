@@ -16,4 +16,4 @@ if [ -z "$REM_HOST" ]; then
   REM_HOST=smeagol.elyograg.org
 fi
 
-sudo -E rsync -avcHP --delete $REM_HOST:/storage0/build/haproxy/ ./
+sudo -E rsync -avcHP --delete $REM_HOST:/storage0/elyogit/haproxy/ ./

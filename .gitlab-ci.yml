@@ -32,7 +32,7 @@ build_and_test:
     - echo "${TEST_STRING}" > /tmp/test_file
     - sudo -E cp -f /tmp/test_file /var/www/html/.
     - |
-      FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
+      FOUND_STRING="$(curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
       echo "PUSHED '${TEST_STRING}'"
       echo "PULLED '${FOUND_STRING}'"
       if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
