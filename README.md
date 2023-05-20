@@ -22,4 +22,4 @@ prep-source script, and then proceed with the build/install of quictls and
 haproxy.  It will then start haproxy, write a test string to the webroot, and
 retrieve that string with http3 forced.  The test string includes the git
 commit hash.  If the pushed string and retrieved string don't match, the CI
-job fails.
+job will fail.
