@@ -39,6 +39,7 @@ build_and_test:
       sudo -E chown -R gitlab-runner: .
       echo "PUSHED '${TEST_STRING}'"
       echo "PULLED '${FOUND_STRING}'"
+      sudo -E rm -f /tmp/test_file /var/www/html/test_file
       if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
         echo "Found string does not match expected string!"
         echo "Something went wrong!"
