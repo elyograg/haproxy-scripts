@@ -33,6 +33,7 @@ build_and_test:
     - sudo -E cp -f /tmp/test_file /var/www/html/.
     - |
       FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
+      sudo -E chown -R gitlab-runner: .
       echo "PUSHED '${TEST_STRING}'"
       echo "PULLED '${FOUND_STRING}'"
       if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
