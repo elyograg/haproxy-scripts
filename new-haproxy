@@ -1,11 +1,27 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
-# shellcheck source=./common-functions.sh
+# shellcheck source=/dev/null
 source "${SCRIPT_DIR}/common-functions.sh"
 if [ -f "${SCRIPT_DIR}/repo_overrides" ]; then
   # shellcheck source=/dev/null
   source "${SCRIPT_DIR}/repo_overrides"
+fi
+
+PCS=""
+which pcs && PCS="true"
+
+BAD_PCS_HOST=""
+if [ -n "${PCS}" ]; then
+  PCS_HAPROXY_HOST="$(sudo -E pcs status | grep -iE "haproxy.*started" | awk '{print $NF}')"
+  RET="$?"
+  if [ "${RET}" -ne 0 ]; then
+    die "Unable to get pacemaker status"
+  fi
+
+  if [ "${PCS_HAPROXY_HOST}" != "smeagol" ]; then
+    BAD_PCS_HOST="true"
+  fi
 fi
 
 if [ -n "${HAPROXY_OVERRIDE}" ]; then
@@ -45,11 +61,10 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
       SSL_INC=/opt/quictls/include \
       SSL_LIB=$QUICTLS_LIB \
       LDFLAGS="-Wl,-rpath,$QUICTLS_LIB" \
-      # The DEBUG environment variable is used by the makefile
       DEBUG=" " \
 
-# blank line above intentional
-#      DEBUG="-DDEBUG_H3 -DDEBUG_QPACK" \
+    # blank line above intentional
+    # DEBUG="-DDEBUG_H3 -DDEBUG_QPACK" \
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
       log_info "Installing haproxy"
@@ -70,4 +85,8 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
   fi
 else
   die "location (${HAPROXY_SRC_DIR}) does not exist."
+fi
+
+if [ -n "${BAD_PCS_HOST}" ]; then
+  log_warn "WARNING: Host running haproxy is ${PCS_HAPROXY_HOST} not smeagol."
 fi
