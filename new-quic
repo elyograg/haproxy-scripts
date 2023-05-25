@@ -42,12 +42,14 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd "${QUICTLS_SRC_DIR}" || die "Unable to cd to ${QUICTLS_SRC_DIR}"
     fetch_from_git "quictls"
-    #sudo -E git checkout "$(sudo -E git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
-    #NEW_BRANCH="$(sudo -E git remote show origin | grep -Ew "OpenSSL_1.*quic" | sort | tail -n1 | awk '{print $1}')"
-    #NEW_BRANCH="$(sudo -E git remote show origin | grep -Ew "openssl-3\.0.*quic" | sort | tail -n1 | awk '{print $1}')"
-    NEW_BRANCH="$(sudo -E git remote show origin | grep -Ew "openssl-3\.1.*quic" | sort | tail -n1 | awk '{print $1}')"
-    log_info "Changing branch to '${NEW_BRANCH}'"
-    sudo -E git checkout "${NEW_BRANCH}" 2>&1
+    if [ -z "${NEW_QUIC_BRANCH}" ]; then
+      #sudo -E git checkout "$(sudo -E git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+      #NEW_QUIC_BRANCH="$(sudo -E git remote show origin | grep -Ew "OpenSSL_1.*quic" | sort | tail -n1 | awk '{print $1}')"
+      #NEW_QUIC_BRANCH="$(sudo -E git remote show origin | grep -Ew "openssl-3\.0.*quic" | sort | tail -n1 | awk '{print $1}')"
+      NEW_QUIC_BRANCH="$(sudo -E git remote show origin | grep -Ew "openssl-3\.1.*quic.*" | sort | tail -n1 | awk '{print $1}')"
+    fi
+    log_info "Changing branch to '${NEW_QUIC_BRANCH}'"
+    sudo -E git checkout "${NEW_QUIC_BRANCH}" 2>&1
     fetch_from_git "quictls"
     log_info "Cleaning quictls repo"
     sudo -E make -s distclean

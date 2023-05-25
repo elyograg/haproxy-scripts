@@ -28,6 +28,9 @@ sync_elapsed="$(($end_time-$start_time))"
 log_info "- Sync done or skipped"
 
 start_time="$(date -u +%s)"
+if [ -n "${NEW_QUIC_BRANCH}" ]; then
+  export NEW_QUIC_BRANCH
+fi
 ./new-quic git-quictls 2>&1
 end_time="$(date -u +%s)"
 quictls_elapsed="$(($end_time-$start_time))"
