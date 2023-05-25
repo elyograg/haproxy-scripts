@@ -11,7 +11,7 @@ build_and_test:
 #    - sudo mkdir -p /usr/local/src/haproxy-scripts
 #    - sudo -E rsync -qaH --delete ./ /usr/local/src/haproxy-scripts/
 #    - cd /usr/local/src/haproxy-scripts
-    - sudo -E chown -R root:root .
+    - sudo -E ./fixperms
     - sudo -E mkdir -p /etc/haproxy
     - sudo -E rm -rf /var/www/html/test_file
     - sudo -E ./prep-source

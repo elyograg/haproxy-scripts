@@ -28,7 +28,7 @@ else
   sudo -E /usr/bin/apt-get -y install build-essential git zlib1g-dev python3-psutil python-is-python3
   sudo -E /usr/bin/apt-get -y build-dep haproxy
   sudo -E /usr/bin/apt-get -y build-dep openssl
-  sudo -E /usr/bin/apt-get -y dist-upgrade
+#  sudo -E /usr/bin/apt-get -y dist-upgrade
 fi
 
 sudo -E rm -rf old.git-quictls git-quictls > /dev/null
