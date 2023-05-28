@@ -30,6 +30,7 @@ build_and_test:
     - sudo -E mkdir -p /etc/ssl/certs/local
     - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
     - sudo -E ./fullstack
+    - sudo -E ./fixperms
     - sudo -E rm -rf /tmp/test_file
     - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - echo "${TEST_STRING}" > /tmp/test_file
