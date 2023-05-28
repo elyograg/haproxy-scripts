@@ -48,6 +48,7 @@ fetch_from_git() {
   REPO_NAME="$1"
   shift
   echo "Fetching ${REPO_NAME} from git"
+  ./fixperms
   sudo -E git fetch --all 2>&1
   RET="$?"
   if [ "${RET}" -ne 0 ]; then
