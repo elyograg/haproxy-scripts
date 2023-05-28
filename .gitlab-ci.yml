@@ -13,7 +13,6 @@ build_and_test:
     - sudo -E mkdir -p /etc/haproxy
     - sudo -E rm -rf /var/www/html/test_file
     - sudo -E ./prep-source
-    - sudo -E ./fixperms
     - systemctl status docker && DOCKERSVC=true
     - if [ -z "${DOCKERSVC}" ]; then
     -   if [ -f /etc/redhat-release ]; then
@@ -40,7 +39,6 @@ build_and_test:
       sudo -E chown -R gitlab-runner: .
       echo "PUSHED '${TEST_STRING}'"
       echo "PULLED '${FOUND_STRING}'"
-      sudo -E ./fixperms
       sudo -E rm -f /tmp/test_file /var/www/html/test_file
       if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
         echo "Found string does not match expected string!"
