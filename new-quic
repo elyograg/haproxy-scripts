@@ -42,6 +42,7 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd "${QUICTLS_SRC_DIR}" || die "Unable to cd to ${QUICTLS_SRC_DIR}"
     sudo -E git checkout master > /dev/null 2>&1
+    ../fixperms
     fetch_from_git "quictls"
     if [ -z "${NEW_QUIC_BRANCH}" ]; then
       #sudo -E git checkout "$(sudo -E git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
@@ -51,6 +52,7 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     fi
     log_info "Changing branch to '${NEW_QUIC_BRANCH}'"
     sudo -E git checkout "${NEW_QUIC_BRANCH}" 2>&1
+    ../fixperms
     fetch_from_git "quictls"
     log_info "Cleaning quictls repo"
     sudo -E make -s distclean

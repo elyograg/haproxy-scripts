@@ -48,6 +48,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
     log_info "Haproxy repo maintenance"
     sudo -E make -s clean
+    ../fixperms
     fetch_from_git "haproxy"
     log_info "Building haproxy"
     log_info "Using ${MAKE_COUNT} threads with make"
