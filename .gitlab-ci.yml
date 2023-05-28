@@ -27,6 +27,7 @@ build_and_test:
     - fi
     - sudo -E ./install-haproxy-service git-haproxy-2.7
     - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo -E mkdir -p /etc/ssl/certs/local
     - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
     - sudo -E ./fullstack
     - sudo -E rm -rf /tmp/test_file
