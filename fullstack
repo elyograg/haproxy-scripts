@@ -16,7 +16,7 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
       log_warn "Syncing from smeagol.elyograg.org"
       ./sync_from_creator 2>&1
     else
-      log_info "This host IS smeagol.  Skipping sync"
+      log_info "This host IS the originating system.  Skipping sync"
     fi
   else
     echo "This host is not in the elyograg.org namespace.  Skipping sync"
