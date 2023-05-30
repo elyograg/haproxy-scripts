@@ -26,18 +26,20 @@ round() {
 }
 
 make_cpu_count() {
-  local COUNT;
-  local MAKE_COUNT;
-  COUNT=$(python -c "import psutil; print(psutil.cpu_count(logical=False))")
-  RET="$?"
-  if [ "${RET}" -ne 0 ]; then
-    die "GETTING CPU COUNT FAILED."
-  fi
+if [ -z "${MAKE_COUNT}" ]; then
+    local COUNT;
+    local MAKE_COUNT;
+    COUNT=$(python -c "import psutil; print(psutil.cpu_count(logical=False))")
+    RET="$?"
+    if [ "${RET}" -ne 0 ]; then
+      die "GETTING CPU COUNT FAILED."
+    fi
 
-  # Don't mess with the line below.  Took FOREVER to get it right.
-  MAKE_COUNT="$(round "$(echo "scale=2 ; (${COUNT} / 2)" | bc)" 0)"
-  if [ "${MAKE_COUNT}" -lt 2 ]; then
-    MAKE_COUNT=2
+    # Don't mess with the line below.  Took FOREVER to get it right.
+    MAKE_COUNT="$(round "$(echo "scale=2 ; (${COUNT} / 2)" | bc)" 0)"
+    if [ "${MAKE_COUNT}" -lt 2 ]; then
+      MAKE_COUNT=2
+    fi
   fi
 
   echo "${MAKE_COUNT}"
