@@ -26,6 +26,8 @@ round() {
 }
 
 make_cpu_count() {
+local RET;
+RET=0
 if [ -z "${MAKE_COUNT}" ]; then
     local COUNT;
     local MAKE_COUNT;
