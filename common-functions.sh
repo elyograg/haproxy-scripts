@@ -39,8 +39,8 @@ if [ -z "${MAKE_COUNT}" ]; then
 
     # Don't mess with the line below.  Took FOREVER to get it right.
     MAKE_COUNT="$(round "$(echo "scale=2 ; (${COUNT} / 2)" | bc)" 0)"
-    if [ "${MAKE_COUNT}" -lt 2 ]; then
-      MAKE_COUNT=2
+    if [ "${MAKE_COUNT}" -lt 3 ]; then
+      MAKE_COUNT=3
     fi
   fi
 

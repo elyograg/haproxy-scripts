@@ -1,6 +1,6 @@
 #!/bin/bash
 
-##HAPROXY_OVERRIDE=git-haproxy-master
+#HAPROXY_OVERRIDE=git-haproxy-2.8
 #QUICTLS_OVERRIDE=git-quictls-master
 
 if [ -z "${NEW_QUIC_BRANCH}" ]; then
