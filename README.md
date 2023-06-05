@@ -35,3 +35,6 @@ going to completely ignore them.  This is a personal project made available
 because others might find it useful.  It is not meant to address everything
 that the world can think of.  Think of it as a starting point for your own
 tinkering.
+
+Building the entire gitlab CI infrastructure in Docker was attempted, didn't
+work.  Need to learn more before trying that again.
