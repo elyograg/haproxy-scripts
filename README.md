@@ -27,3 +27,11 @@ job will fail.
 To skip the CI job for a push:
 
 git push -o ci.skip
+
+# Issues
+
+Can't guarantee that any github issue opened will get resolved, but I'm not
+going to completely ignore them.  This is a personal project made available
+because others might find it useful.  It is not meant to address everything
+that the world can think of.  Think of it as a starting point for your own
+tinkering.
