@@ -1,0 +1,2 @@
+/etc/ssl/certs/local/REDACTED1.org.wildcards.combined.pem [ocsp-update on]
+/etc/ssl/certs/local/REDACTED2.com.wildcards.combined.pem [ocsp-update on]
