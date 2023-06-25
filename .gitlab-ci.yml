@@ -1,3 +1,4 @@
+---
 variables:
   FF_ENABLE_JOB_CLEANUP: "true"
 
