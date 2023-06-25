@@ -6,6 +6,10 @@ source "${SCRIPT_DIR}/common-functions.sh"
 
 cd "${SCRIPT_DIR}" || die "can't change to ${SCRIPT_DIR}"
 
+if [[ -f "/proc/1/cgroup" ]] && grep -q "/docker/" "/proc/1/cgroup"; then
+    CI_COMMIT_REF_NAME=docker
+fi
+
 start_time="$(date -u +%s)"
 log_info "Starting fullstack script"
 log_info "CI branch: ${CI_COMMIT_REF_NAME}"
