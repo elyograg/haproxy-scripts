@@ -11,16 +11,13 @@ build_and_deploy:
     - sudo -E ./fixperms
     - sudo -E rm -rf /tmp/cienv.txt
     - env > /tmp/cienv.txt
-    - systemctl status docker && DOCKERSVC=true
-    - if [ -z "${DOCKERSVC}" ]; then
-        if [ -f /etc/redhat-release ]; then
-          sudo -E yum -y makecache
-          sudo -E yum -y install docker
-          sudo -E service docker restart
-        else
-          sudo -E apt-get update -y
-          DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
-        fi
+    - if [ -f /etc/redhat-release ]; then
+        sudo -E yum -y makecache
+        sudo -E yum -y install docker
+        sudo -E service docker restart
+      else
+        sudo -E apt-get update -y
+        DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
       fi
     - sudo -E ./fixperms
     - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
