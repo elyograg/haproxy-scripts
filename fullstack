@@ -21,7 +21,9 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   else
     echo "This host is not in the elyograg.org namespace.  Skipping sync"
     ./fixperms
-    fetch_from_git "myself"
+    if [ -z "${CI_COMMIT_REF_NAME}" ]; then
+      fetch_from_git "myself"
+    fi
   fi
 fi
 end_time="$(date -u +%s)"
