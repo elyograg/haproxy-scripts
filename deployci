@@ -11,7 +11,7 @@ TMPRET="$?"
 RET=$((RET+TMPRET))
 
 ./fixperms
-
+./prep-source
 ./fullstack
 TMPRET="$?"
 RET=$((RET+TMPRET))
