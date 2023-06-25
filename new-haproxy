@@ -13,7 +13,7 @@ which pcs && PCS="true"
 
 BAD_PCS_HOST=""
 if [ -n "${PCS}" ]; then
-  PCS_HAPROXY_HOST="$(sudo -E pcs status | grep -iE "haproxy.*started" | awk '{print $NF}')"
+  PCS_HAPROXY_HOST="$(pcs status | grep -iE "haproxy.*started" | awk '{print $NF}')"
   RET="$?"
   if [ "${RET}" -ne 0 ]; then
     die "Unable to get pacemaker status"
@@ -47,11 +47,11 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
   if [ -d "${HAPROXY_SRC_DIR}" ]; then
     cd "${HAPROXY_SRC_DIR}" || die "cd to ${HAPROXY_SRC_DIR} didn't work"
     log_info "Haproxy repo maintenance"
-    sudo -E make -s clean
+    make -s clean
     fetch_from_git "haproxy"
     log_info "Building haproxy"
     log_info "Using ${MAKE_COUNT} threads with make"
-    sudo -E make -s "-j${MAKE_COUNT}" TARGET=linux-glibc \
+    make -s "-j${MAKE_COUNT}" TARGET=linux-glibc \
       USE_PCRE2_JIT=1 \
       USE_OPENSSL=1 \
       USE_ZLIB=1 \
@@ -68,15 +68,15 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
       log_info "Installing haproxy"
-      sudo -E make -s install > /dev/null
+      make -s install > /dev/null
       RETVAL="$?"
       if [ "$RETVAL" -ne 0 ]; then
         die "Install failed!"
       fi
       log_info "Cleaning haproxy repo"
-      sudo -E make -s clean > /dev/null
+      make -s clean > /dev/null
       log_info "Restarting haproxy"
-      sudo -E service haproxy restart
+      service haproxy restart
     else
       die "Build failed!"
     fi

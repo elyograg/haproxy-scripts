@@ -7,8 +7,8 @@ cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}!  This is weird."
 
 if [ -f /etc/redhat-release ]; then
   log_info "Trying redhat commands"
-  sudo -E yum -y makecache
-  sudo -E yum -y install \
+  yum -y makecache
+  yum -y install \
     perl-IPC-Cmd perl-Digest-SHA openssl-devel zlib-devel pcre2-devel \
     systemd-devel autoconf automake binutils bison flex \
     gcc gcc-c++ gettext libtool make patch pkgconfig \
@@ -17,24 +17,24 @@ if [ -f /etc/redhat-release ]; then
     intltool patchutils rcs subversion swig systemtap python3 \
 
   # blank line above is intentional
-  sudo -E alternatives --set python /usr/bin/python3
+  alternatives --set python /usr/bin/python3
 else
   log_info "Trying debian/ubuntu commands"
   DEBIAN_FRONTEND=noninteractive
   export DEBIAN_FRONTEND
-  sudo -E /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
-  sudo -E /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
-  sudo -E /usr/bin/apt-get -y update
-  sudo -E /usr/bin/apt-get -y install build-essential git zlib1g-dev python3-psutil python-is-python3
-  sudo -E /usr/bin/apt-get -y build-dep haproxy
-  sudo -E /usr/bin/apt-get -y build-dep openssl
-#  sudo -E /usr/bin/apt-get -y dist-upgrade
+  /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
+  /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
+  /usr/bin/apt-get -y update
+  /usr/bin/apt-get -y install build-essential git zlib1g-dev python3-psutil python-is-python3
+  /usr/bin/apt-get -y build-dep haproxy
+  /usr/bin/apt-get -y build-dep openssl
+#  /usr/bin/apt-get -y dist-upgrade
 fi
 
-sudo -E rm -rf old.git-quictls git-quictls > /dev/null
+rm -rf old.git-quictls git-quictls > /dev/null
 echo "Fresh clone of quictls"
-sudo -E git clone -v https://github.com/quictls/openssl.git git-quictls 2>&1
-sudo -E rm -rf git-haproxy-2.8 git-haproxy-2.7 git-haproxy-master old.git-haproxy-2.8 old.git-haproxy-2.7 old-git-haproxy-master > /dev/null
+git clone -v https://github.com/quictls/openssl.git git-quictls 2>&1
+rm -rf git-haproxy-2.8 git-haproxy-2.7 git-haproxy-master old.git-haproxy-2.8 old.git-haproxy-2.7 old-git-haproxy-master > /dev/null
 echo "Fresh clone of haproxy 2.8 repo"
-sudo -E git clone -v https://git.haproxy.org/git/haproxy-2.8.git git-haproxy-2.8 2>&1
+git clone -v https://git.haproxy.org/git/haproxy-2.8.git git-haproxy-2.8 2>&1
 true

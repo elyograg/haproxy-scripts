@@ -41,39 +41,39 @@ log_info "- Beginning pull/build of quictls"
 if [ -e "${QUICTLS_SRC_DIR}" ]; then
   if [ -d "${QUICTLS_SRC_DIR}" ]; then
     cd "${QUICTLS_SRC_DIR}" || die "Unable to cd to ${QUICTLS_SRC_DIR}"
-    sudo -E git checkout master > /dev/null 2>&1
+    git checkout master > /dev/null 2>&1
     fetch_from_git "quictls"
     if [ -z "${NEW_QUIC_BRANCH}" ]; then
-      #sudo -E git checkout "$(sudo -E git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
-      #NEW_QUIC_BRANCH="$(sudo -E git remote show origin | grep -Ew "OpenSSL_1.*quic" | sort | tail -n1 | awk '{print $1}')"
-      #NEW_QUIC_BRANCH="$(sudo -E git remote show origin | grep -Ew "openssl-3\.0.*quic" | sort | tail -n1 | awk '{print $1}')"
-      NEW_QUIC_BRANCH="$(sudo -E git remote show origin | grep -Ew "openssl-3\.1.*quic.*" | sort | tail -n1 | awk '{print $1}')"
+      #git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+      #NEW_QUIC_BRANCH="$(git remote show origin | grep -Ew "OpenSSL_1.*quic" | sort | tail -n1 | awk '{print $1}')"
+      #NEW_QUIC_BRANCH="$(git remote show origin | grep -Ew "openssl-3\.0.*quic" | sort | tail -n1 | awk '{print $1}')"
+      NEW_QUIC_BRANCH="$(git remote show origin | grep -Ew "openssl-3\.1.*quic.*" | sort | tail -n1 | awk '{print $1}')"
     fi
     log_info "Changing branch to '${NEW_QUIC_BRANCH}'"
-    sudo -E git checkout "${NEW_QUIC_BRANCH}" 2>&1
+    git checkout "${NEW_QUIC_BRANCH}" 2>&1
     fetch_from_git "quictls"
     log_info "Cleaning quictls repo"
-    sudo -E make -s distclean
+    make -s distclean
     log_info "Configuring quictls"
     # shellcheck disable=SC2086
-    sudo -E ./config --prefix="/opt/quictls" ${CONFARGS}
+    ./config --prefix="/opt/quictls" ${CONFARGS}
     RETVAL="$?"
     if [ "$RETVAL" -eq 0 ]; then
       log_info "Building quictls, may take a few minutes"
       log_info "Using ${MAKE_COUNT} threads with make"
-      sudo -E make -s -j "${MAKE_COUNT}"
+      make -s -j "${MAKE_COUNT}"
       RETVAL="$?"
       if [ "$RETVAL" -eq 0 ]; then
-        sudo -E rm -rf /opt/old.quictls
-        sudo -E mv /opt/quictls /opt/old.quictls
+        rm -rf /opt/old.quictls
+        mv /opt/quictls /opt/old.quictls
         log_info "Installing quictls"
-        sudo -E make -s install_sw install_ssldirs
+        make -s install_sw install_ssldirs
         RETVAL="$?"
         if [ "$RETVAL" -eq 0 ]; then
-          sudo -E bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
-          sudo -E rm -rf /opt/quictls/ssl/certs
-          sudo -E ln -s /etc/ssl/certs /opt/quictls/ssl/certs
-          sudo -E make -s distclean
+          bash -c "$(declare -f add_bin_to_path); add_bin_to_path"
+          rm -rf /opt/quictls/ssl/certs
+          ln -s /etc/ssl/certs /opt/quictls/ssl/certs
+          make -s distclean
         else
           die "Install failed!"
         fi

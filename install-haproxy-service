@@ -8,10 +8,10 @@ DIR=$(dirname "$0")/"$1"/admin/systemd
 if [ -e "$DIR" ]; then
   if [ -d "$DIR" ]; then
     cd "${DIR}" || exit
-    sudo -E make clean haproxy.service
-    sudo -E cp haproxy.service /etc/systemd/system/.
-    sudo -E systemctl daemon-reload
-    sudo -E systemctl enable haproxy
+    make clean haproxy.service
+    cp haproxy.service /etc/systemd/system/.
+    systemctl daemon-reload
+    systemctl enable haproxy
   else
     log_err "location ($DIR) is not a directory."
   fi
