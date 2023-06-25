@@ -14,15 +14,15 @@ build:
     - env > /tmp/cienv.txt
     - systemctl status docker && DOCKERSVC=true
     - if [ -z "${DOCKERSVC}" ]; then
-      if [ -f /etc/redhat-release ]; then
-        sudo -E yum -y makecache
-        sudo -E yum -y install docker
-        sudo -E service docker restart
-      else
-        sudo -E apt-get update -y
-        DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
+        if [ -f /etc/redhat-release ]; then
+          sudo -E yum -y makecache
+          sudo -E yum -y install docker
+          sudo -E service docker restart
+        else
+          sudo -E apt-get update -y
+          DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
+        fi
       fi
-    fi
     - sudo -E ./fixperms
     - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - echo "${TEST_STRING}" > /tmp/test_file
