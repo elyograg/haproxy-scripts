@@ -14,20 +14,21 @@ build_and_deploy:
     - sudo -E ./fixperms
     - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - echo "${TEST_STRING}" > /tmp/test_file
-    - docker run -d -p 81:81 -p 443:443/udp --name my_apache_container
+    - docker rm -f haproxy_ci_apache || echo "container not present"
+    - docker run -d -p 81:81 -p 443:443/udp --name haproxy_ci_apache
       httpd:latest
     - tar cf ../repo.tar .
-    - docker exec my_apache_container mkdir -p ~/git/haproxy-scripts
-    - docker cp /tmp/test_file my_apache_container:/usr/local/apache2/htdocs/
-    - docker cp ../repo.tar my_apache_container:~/git/haproxy-scripts/
-    - docker exec my_apache_container /bin/bash -c
+    - docker exec haproxy_ci_apache mkdir -p ~/git/haproxy-scripts
+    - docker cp /tmp/test_file haproxy_ci_apache:/usr/local/apache2/htdocs/
+    - docker cp ../repo.tar haproxy_ci_apache:~/git/haproxy-scripts/
+    - docker exec haproxy_ci_apache /bin/bash -c
       "cd ~/git/haproxy-scripts && tar xf repo.tar"
-    - docker exec my_apache_container /bin/bash -c
+    - docker exec haproxy_ci_apache /bin/bash -c
       "sed -i 's/Listen 80/Listen 81/' /usr/local/apache2/conf/httpd.conf"
-    - docker exec my_apache_container /bin/bash -c
+    - docker exec haproxy_ci_apache /bin/bash -c
       "sed -i '/<VirtualHost \*:80>/,/<\/VirtualHost>/ s/:80/:81/' /usr/local/apache2/conf/extra/httpd-vhosts.conf"
-    - docker exec my_apache_container httpd -k restart
-    - docker exec my_apache_container /bin/bash -c
+    - docker exec haproxy_ci_apache httpd -k restart
+    - docker exec haproxy_ci_apache /bin/bash -c
       "cd ~/git/haproxy-scripts && ./deployci"
 
 test:
@@ -38,7 +39,7 @@ test:
       curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
     - echo "PUSHED '${TEST_STRING}'"
     - echo "PULLED '${FOUND_STRING}'"
-    - docker rm -f my_apache_container
+    - docker rm -f haproxy_ci_apache
     - if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
         echo "Found string does not match expected string!"
         echo "Something went wrong!"
