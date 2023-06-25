@@ -10,6 +10,8 @@ cp -a selfsigned.pem /etc/ssl/certs/local/.
 TMPRET="$?"
 RET=$((RET+TMPRET))
 
+./fixperms
+
 ./fullstack
 TMPRET="$?"
 RET=$((RET+TMPRET))
