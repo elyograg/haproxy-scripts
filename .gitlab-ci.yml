@@ -31,7 +31,7 @@ build_and_deploy:
       "sed -i '/<VirtualHost \*:80>/,/<\/VirtualHost>/ s/:80/:81/' /usr/local/apache2/conf/extra/httpd-vhosts.conf"
     - docker exec haproxy_ci_apache httpd -k restart
     - docker exec haproxy_ci_apache /bin/bash -c
-      "cd /opt/git-repo && chown -R root:root . && ./deployci"
+      "cd /opt/git-repo && chown -R root:root . && GIT_SSL_NO_VERIFY=true ./deployci"
 
 test:
   stage: test
