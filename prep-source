@@ -23,6 +23,10 @@ else
   DEBIAN_FRONTEND=noninteractive
   export DEBIAN_FRONTEND
   /bin/cp -a /etc/apt/sources.list /etc/apt/sources.list.before
+  if [ -n "${RUNNING_IN_DOCKER}" ]; then
+    echo "deb-src http://deb.debian.org/debian/ bookworm main" >> /etc/apt/sources.list
+    echo "deb-src http://security.debian.org/debian-security bookworm/updates main" >> /etc/apt/sources.list
+  fi
   /bin/sed -i "s/^#.*deb-src/deb-src/g" /etc/apt/sources.list
   /usr/bin/apt-get -y update
   /usr/bin/apt-get -y install build-essential git zlib1g-dev python3-psutil python-is-python3 procps bc
