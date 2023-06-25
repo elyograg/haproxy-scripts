@@ -1,0 +1,25 @@
+#!/bin/bash
+
+mkdir -p /etc/haproxy
+cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+TMPRET="$?"
+RET=$((RET+TMPRET))
+
+mkdir -p /etc/ssl/certs/local
+cp -a selfsigned.pem /etc/ssl/certs/local/.
+TMPRET="$?"
+RET=$((RET+TMPRET))
+
+./fullstack
+TMPRET="$?"
+RET=$((RET+TMPRET))
+
+./fixperms
+TMPRET="$?"
+RET=$((RET+TMPRET))
+
+/usr/local/sbin/haproxy -Ws -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid -S /run/haproxy-master.sock > /dev/null 2> /dev/null &
+TMPRET="$?"
+RET=$((RET+TMPRET))
+
+exit "${RET}"
