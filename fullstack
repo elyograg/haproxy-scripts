@@ -6,8 +6,7 @@ source "${SCRIPT_DIR}/common-functions.sh"
 
 cd "${SCRIPT_DIR}" || die "can't change to ${SCRIPT_DIR}"
 
-cat /proc/1/cgroup
-if [[ -f "/proc/1/cgroup" ]] && grep -q "/docker/" "/proc/1/cgroup"; then
+if [ -n "${RUNNING_IN_DOCKER}" ]; then
   export CI_COMMIT_REF_NAME="docker"
 fi
 
