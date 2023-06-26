@@ -1,0 +1,48 @@
+---
+variables:
+  FF_ENABLE_JOB_CLEANUP: "true"
+  TEST_STRING: "TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
+
+stages:
+  - build_and_deploy
+  - test
+
+build_and_deploy:
+  stage: build_and_deploy
+  script:
+    - sudo -E rm -rf /tmp/cienv.txt
+    - env > /tmp/cienv.txt
+    - sudo -E ./fixperms
+    - echo "${TEST_STRING}" > /tmp/test_file
+    - docker rm -f haproxy_ci_apache || echo "container not present"
+    - docker run -d -p 9999:443/udp -e RUNNING_IN_DOCKER=true --name haproxy_ci_apache httpd:latest
+    - tar cf ../repo.tar .
+    - docker exec haproxy_ci_apache mkdir -p /opt/git-repo
+    - docker cp /tmp/test_file haproxy_ci_apache:/usr/local/apache2/htdocs/
+    - docker cp ../repo.tar haproxy_ci_apache:/opt/git-repo/
+    - docker exec haproxy_ci_apache /bin/bash -c
+      "cd /opt/git-repo && tar xf repo.tar"
+    - docker exec haproxy_ci_apache /bin/bash -c
+      "cd /opt/git-repo && chown root:root -R ."
+    - docker exec haproxy_ci_apache /bin/bash -c
+      "sed -i 's/Listen 80/Listen 81/' /usr/local/apache2/conf/httpd.conf"
+    - docker exec haproxy_ci_apache /bin/bash -c
+      "sed -i '/<VirtualHost \*:80>/,/<\/VirtualHost>/ s/:80/:81/' /usr/local/apache2/conf/extra/httpd-vhosts.conf"
+    - docker exec haproxy_ci_apache httpd -k restart
+    - docker exec haproxy_ci_apache /bin/bash -c
+      "cd /opt/git-repo && chown -R root:root . && GIT_SSL_NO_VERIFY=true ./deployci"
+
+test:
+  stage: test
+  script:
+    - FOUND_STRING="$(sudo -E docker run
+      --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3
+      curl -m 5 -s -f -k "https://locahost:9999/test_file" --http3)"
+    - echo "PUSHED '${TEST_STRING}'"
+    - echo "PULLED '${FOUND_STRING}'"
+    - docker rm -f haproxy_ci_apache
+    - if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
+        echo "Found string does not match expected string!"
+        echo "Something went wrong!"
+        exit 1
+      fi

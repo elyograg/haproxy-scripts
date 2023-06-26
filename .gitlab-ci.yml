@@ -1,47 +1,46 @@
----
 variables:
   FF_ENABLE_JOB_CLEANUP: "true"
-  TEST_STRING: "TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
 
 stages:
-  - build_and_deploy
-  - test
+  - build_and_test
 
-build_and_deploy:
-  stage: build_and_deploy
+build_and_test:
+  stage: build_and_test
   script:
+    - sudo -E ./fixperms
     - sudo -E rm -rf /tmp/cienv.txt
     - env > /tmp/cienv.txt
+    - sudo -E mkdir -p /etc/haproxy
+    - sudo -E rm -rf /var/www/html/test_file
+    - sudo -E ./prep-source
+    - systemctl status docker && DOCKERSVC=true
+    - if [ -z "${DOCKERSVC}" ]; then
+    -   if [ -f /etc/redhat-release ]; then
+    -     sudo -E yum -y makecache
+    -     sudo -E yum -y install docker
+    -     sudo -E service docker restart
+    -   else
+    -     sudo -E apt-get update -y
+    -     DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
+    -   fi
+    - fi
+    - sudo -E ./install-haproxy-service git-haproxy-master
+    - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo -E mkdir -p /etc/ssl/certs/local
+    - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
+    - sudo -E ./fullstack
     - sudo -E ./fixperms
+    - sudo -E rm -rf /tmp/test_file
+    - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - echo "${TEST_STRING}" > /tmp/test_file
-    - docker rm -f haproxy_ci_apache || echo "container not present"
-    - docker run -d -p 9999:443/udp -e RUNNING_IN_DOCKER=true --name haproxy_ci_apache httpd:latest
-    - tar cf ../repo.tar .
-    - docker exec haproxy_ci_apache mkdir -p /opt/git-repo
-    - docker cp /tmp/test_file haproxy_ci_apache:/usr/local/apache2/htdocs/
-    - docker cp ../repo.tar haproxy_ci_apache:/opt/git-repo/
-    - docker exec haproxy_ci_apache /bin/bash -c
-      "cd /opt/git-repo && tar xf repo.tar"
-    - docker exec haproxy_ci_apache /bin/bash -c
-      "cd /opt/git-repo && chown root:root -R ."
-    - docker exec haproxy_ci_apache /bin/bash -c
-      "sed -i 's/Listen 80/Listen 81/' /usr/local/apache2/conf/httpd.conf"
-    - docker exec haproxy_ci_apache /bin/bash -c
-      "sed -i '/<VirtualHost \*:80>/,/<\/VirtualHost>/ s/:80/:81/' /usr/local/apache2/conf/extra/httpd-vhosts.conf"
-    - docker exec haproxy_ci_apache httpd -k restart
-    - docker exec haproxy_ci_apache /bin/bash -c
-      "cd /opt/git-repo && chown -R root:root . && GIT_SSL_NO_VERIFY=true ./deployci"
-
-test:
-  stage: test
-  script:
-    - FOUND_STRING="$(sudo -E docker run
-      --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3
-      curl -m 5 -s -f -k "https://locahost:9999/test_file" --http3)"
-    - echo "PUSHED '${TEST_STRING}'"
-    - echo "PULLED '${FOUND_STRING}'"
-    - docker rm -f haproxy_ci_apache
-    - if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
+    - sudo -E cp -f /tmp/test_file /var/www/html/.
+    - |
+      FOUND_STRING="$(sudo -E docker run --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3 curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
+      sudo -E chown -R gitlab-runner: .
+      echo "PUSHED '${TEST_STRING}'"
+      echo "PULLED '${FOUND_STRING}'"
+      sudo -E rm -f /tmp/test_file /var/www/html/test_file
+      if [ "${TEST_STRING}" != "${FOUND_STRING}" ]; then
         echo "Found string does not match expected string!"
         echo "Something went wrong!"
         exit 1
