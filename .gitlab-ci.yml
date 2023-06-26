@@ -1,6 +1,7 @@
 ---
 variables:
   FF_ENABLE_JOB_CLEANUP: "true"
+  TEST_STRING: "TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
 
 stages:
   - build_and_deploy
@@ -12,19 +13,17 @@ build_and_deploy:
     - sudo -E rm -rf /tmp/cienv.txt
     - env > /tmp/cienv.txt
     - sudo -E ./fixperms
-    - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - echo "${TEST_STRING}" > /tmp/test_file
     - docker rm -f haproxy_ci_apache || echo "container not present"
     - docker run -d -p 9999:443/udp -e RUNNING_IN_DOCKER=true --name haproxy_ci_apache httpd:latest
-#    - docker exec haproxy_ci_apache /bin/bash -c
-#      "apt -y update && apt -y install git ca-certificates"
-#    - sudo -E chown root:root -R .
     - tar cf ../repo.tar .
     - docker exec haproxy_ci_apache mkdir -p /opt/git-repo
     - docker cp /tmp/test_file haproxy_ci_apache:/usr/local/apache2/htdocs/
     - docker cp ../repo.tar haproxy_ci_apache:/opt/git-repo/
     - docker exec haproxy_ci_apache /bin/bash -c
       "cd /opt/git-repo && tar xf repo.tar"
+    - docker exec haproxy_ci_apache /bin/bash -c
+      "cd /opt/git-repo && chown root:root -R ."
     - docker exec haproxy_ci_apache /bin/bash -c
       "sed -i 's/Listen 80/Listen 81/' /usr/local/apache2/conf/httpd.conf"
     - docker exec haproxy_ci_apache /bin/bash -c
@@ -36,7 +35,6 @@ build_and_deploy:
 test:
   stage: test
   script:
-    - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - FOUND_STRING="$(sudo -E docker run
       --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3
       curl -m 5 -s -f -k "https://locahost:9999/test_file" --http3)"
