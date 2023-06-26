@@ -15,7 +15,7 @@ build_and_deploy:
     - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - echo "${TEST_STRING}" > /tmp/test_file
     - docker rm -f haproxy_ci_apache || echo "container not present"
-    - docker run -d -p 81:81 -p 443:443/udp -e RUNNING_IN_DOCKER=true --name haproxy_ci_apache httpd:latest
+    - docker run -d -p 9999:443/udp -e RUNNING_IN_DOCKER=true --name haproxy_ci_apache httpd:latest
 #    - docker exec haproxy_ci_apache /bin/bash -c
 #      "apt -y update && apt -y install git ca-certificates"
 #    - sudo -E chown root:root -R .
@@ -36,9 +36,10 @@ build_and_deploy:
 test:
   stage: test
   script:
+    - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
     - FOUND_STRING="$(sudo -E docker run
       --add-host=host.docker.internal:host-gateway --rm ymuski/curl-http3
-      curl -m 5 -s -f -k "https://host.docker.internal/test_file" --http3)"
+      curl -m 5 -s -f -k "https://locahost:9999/test_file" --http3)"
     - echo "PUSHED '${TEST_STRING}'"
     - echo "PULLED '${FOUND_STRING}'"
     - docker rm -f haproxy_ci_apache
