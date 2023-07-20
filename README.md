@@ -4,7 +4,7 @@ These are scripts for installing haproxy from source with HTTP/3 support.
 
 See instructions at this blog post:
 
-https://purg.atory.org/2023/05/19/installing-and-updating-haproxy-from-source/
+https://purg.atory.org/2023/05/19/easy-compile-install-of-haproxy-from-source/
 
 The included file named `ci-haproxy.cfg` is an extremely barebones config
 example that is used in the CI/CD pipeline.  It is almost certainly missing
