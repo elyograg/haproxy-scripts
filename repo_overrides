@@ -3,8 +3,8 @@
 #HAPROXY_OVERRIDE=git-haproxy-2.8
 #QUICTLS_OVERRIDE=git-quictls-master
 
-if [ -z "${NEW_QUIC_BRANCH}" ]; then
-  NEW_QUIC_BRANCH="openssl-3.1.0+quic+locks"
-fi
-export NEW_QUIC_BRANCH
-export MAKE_COUNT
+#if [ -z "${NEW_QUIC_BRANCH}" ]; then
+#  NEW_QUIC_BRANCH="openssl-3.1.0+quic+locks"
+#fi
+#export NEW_QUIC_BRANCH
+#export MAKE_COUNT
