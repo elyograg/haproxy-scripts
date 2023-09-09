@@ -1,0 +1,35 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
+# shellcheck source=./common-functions.sh
+source "${SCRIPT_DIR}/common-functions.sh"
+
+cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}"
+
+RET="0"
+
+while true
+do
+  REPO_DIR="$1"
+  if [ "${REPO_DIR}" == "" ]; then
+    break
+  else
+    cd "${REPO_DIR}" || die "Can't cd to ${REPO_DIR}"
+  fi
+
+  # Fetch updates from the remote repository
+  git fetch
+
+  # Get the name of the current branch
+  CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
+
+  # Check if the local branch is behind the remote branch
+  if [ "$(git rev-list --count "HEAD..origin/${CURRENT_BRANCH}")" -ne 0 ]; then
+    RET=$((RET+1))
+  fi
+  shift
+  cd ..
+done
+
+exit "${RET}"
+

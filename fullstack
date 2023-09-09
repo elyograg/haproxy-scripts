@@ -10,6 +10,16 @@ if [ -n "${RUNNING_IN_DOCKER}" ]; then
   export CI_COMMIT_REF_NAME="docker"
 fi
 
+./check_for_updates git-*
+RET="$?"
+
+if [ "${RET}" -eq 0 ] && [ ! -f ./forcebuild ]; then
+  log_warn "No updates."
+  exit 0
+fi
+
+rm ./forcebuild -f
+
 start_time="$(date -u +%s)"
 log_info "Starting fullstack script"
 log_info "CI branch: ${CI_COMMIT_REF_NAME}"
