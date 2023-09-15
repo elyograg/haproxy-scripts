@@ -14,10 +14,9 @@ if [ -f /etc/redhat-release ]; then
     gcc gcc-c++ gettext libtool make patch pkgconfig \
     redhat-rpm-config rpm-build rpm-sign byacc cscope ctags \
     diffstat doxygen elfutils gcc-gfortran git indent \
-    intltool patchutils rcs subversion swig systemtap python3 \
+    intltool patchutils rcs subversion swig systemtap python3-psutil \
 
   # blank line above is intentional
-  alternatives --set python /usr/bin/python3
 else
   log_info "Trying debian/ubuntu commands"
   DEBIAN_FRONTEND=noninteractive

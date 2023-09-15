@@ -10,16 +10,6 @@ if [ -n "${RUNNING_IN_DOCKER}" ]; then
   export CI_COMMIT_REF_NAME="docker"
 fi
 
-./check_for_updates git-*
-RET="$?"
-
-if [ "${RET}" -eq 0 ] && [ ! -f ./forcebuild ]; then
-  log_warn "No updates."
-  exit 0
-fi
-
-rm ./forcebuild -f
-
 start_time="$(date -u +%s)"
 log_info "Starting fullstack script"
 log_info "CI branch: ${CI_COMMIT_REF_NAME}"
@@ -28,7 +18,12 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
     if [[ "$(hostname)" != *"smeagol"* ]]; then
       log_warn "Syncing from smeagol.elyograg.org"
+      checksum_before=$(find . -type f -exec md5sum {} + | grep -v "\.git" | sort | md5sum)
       ./sync_from_creator 2>&1
+      checksum_after=$(find . -type f -exec md5sum {} + | grep -v "\.git" | sort | md5sum)
+      if [ "$checksum_before" != "$checksum_after" ]; then
+        touch ./forcebuild
+      fi
     else
       log_info "This host IS the originating system.  Skipping sync"
     fi
@@ -43,6 +38,16 @@ fi
 end_time="$(date -u +%s)"
 sync_elapsed="$(($end_time-$start_time))"
 log_info "- Sync done or skipped"
+
+./check_for_updates git-*
+RET="$?"
+
+if [ "${RET}" -eq 0 ] && [ ! -f ./forcebuild ]; then
+  log_warn "No updates."
+  exit 0
+fi
+
+rm ./forcebuild -f
 
 start_time="$(date -u +%s)"
 ./new-quic git-quictls 2>&1

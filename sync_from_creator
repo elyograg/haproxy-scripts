@@ -1,10 +1,10 @@
 #!/bin/bash
 
 BADCD=""
-SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" || BADCD="true" ; pwd -P)"
 cd "${SCRIPT_DIR}" || BADCD="true"
 if [ -n "${BADCD}" ]; then
-  echo "couldn't cd to ${SCRIPT_DIR}"
+  echo "couldn't cd to script dir"
   exit 1
 fi
 

@@ -31,7 +31,7 @@ RET=0
 if [ -z "${MAKE_COUNT}" ]; then
     local COUNT;
     local MAKE_COUNT;
-    COUNT=$(python -c "import psutil; print(psutil.cpu_count(logical=False))")
+    COUNT=$(python3 -c "import psutil; print(psutil.cpu_count(logical=False))")
     RET="$?"
     if [ "${RET}" -ne 0 ]; then
       die "GETTING CPU COUNT FAILED."

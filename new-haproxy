@@ -74,7 +74,7 @@ if [ -e "${HAPROXY_SRC_DIR}" ]; then
         die "Install failed!"
       fi
       log_info "Cleaning haproxy repo"
-#      make -s clean > /dev/null
+      make -s clean > /dev/null
       log_info "Restarting haproxy"
       service haproxy restart
     else

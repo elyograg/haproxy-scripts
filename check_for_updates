@@ -1,18 +1,17 @@
 #!/bin/bash
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
-# shellcheck source=./common-functions.sh
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd -P)"
+# shellcheck disable=SC1091
 source "${SCRIPT_DIR}/common-functions.sh"
 
 cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}"
 
 RET="0"
 
-while true
-do
+while [ "$#" -gt 0 ]; do
   REPO_DIR="$1"
-  if [ "${REPO_DIR}" == "" ]; then
-    break
+  if [ -z "$REPO_DIR" ]; then
+    continue
   else
     cd "${REPO_DIR}" || die "Can't cd to ${REPO_DIR}"
   fi
@@ -20,16 +19,21 @@ do
   # Fetch updates from the remote repository
   git fetch
 
-  # Get the name of the current branch
-  CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
+  CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
-  # Check if the local branch is behind the remote branch
-  if [ "$(git rev-list --count "HEAD..origin/${CURRENT_BRANCH}")" -ne 0 ]; then
+  # Get the hash of the current branch in the local repository
+  LOCAL_HASH="$(git rev-parse HEAD)"
+
+  # Get the hash of the current branch in the remote repository
+  REMOTE_HASH="$(git rev-parse "origin/${CURRENT_BRANCH}")"
+
+  # Check if the local and remote hashes are different
+  if [ "${LOCAL_HASH}" != "${REMOTE_HASH}" ]; then
     RET=$((RET+1))
   fi
+
   shift
   cd ..
 done
 
 exit "${RET}"
-
