@@ -22,7 +22,7 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
       ./sync_from_creator 2>&1
       checksum_after=$(find . -type f -exec md5sum {} + | grep -v "\.git" | sort | md5sum)
       if [ "$checksum_before" != "$checksum_after" ]; then
-        touch ./forcebuild
+        touch ./force
       fi
     else
       log_info "This host IS the originating system.  Skipping sync"
@@ -42,12 +42,12 @@ log_info "- Sync done or skipped"
 ./check_for_updates git-*
 RET="$?"
 
-if [ "${RET}" -eq 0 ] && [ ! -f ./forcebuild ]; then
+if [ "${RET}" -eq 0 ] && [ ! -f ./force ]; then
   log_warn "No updates."
   exit 0
 fi
 
-rm ./forcebuild -f
+rm ./force -f
 
 start_time="$(date -u +%s)"
 ./new-quic git-quictls 2>&1

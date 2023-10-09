@@ -41,5 +41,5 @@ rm -rf git-haproxy-2.8 git-haproxy-2.7 git-haproxy-master old.git-haproxy-2.8 ol
 echo "Fresh clone of haproxy 2.8 repo"
 git clone -v https://git.haproxy.org/git/haproxy-2.8.git git-haproxy-2.8 2>&1
 # force the build to happen the first time
-touch forcebuild
+touch force
 true

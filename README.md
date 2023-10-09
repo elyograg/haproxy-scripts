@@ -10,6 +10,10 @@ The included file named `ci-haproxy.cfg` is an extremely barebones config
 example that is used in the CI/CD pipeline.  It is almost certainly missing
 things you would want in a production configuration.
 
+The fullstack script will abort without building if it has been run before
+and there are no changes to the repositories.  If you want to force a build
+anyway, create a file called "force" in the root of the repo.
+
 ## CI info:
 
 It is best to put gitlab-runner on a dedicated machine.  I use a VM.  If it
