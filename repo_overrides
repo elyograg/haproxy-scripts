@@ -4,7 +4,7 @@
 #QUICTLS_OVERRIDE=git-quictls-master
 
 #if [ -z "${NEW_QUIC_BRANCH}" ]; then
-#  NEW_QUIC_BRANCH="openssl-3.1.0+quic+locks"
+#  NEW_QUIC_BRANCH="openssl-3.1.2+quic"
 #fi
 #export NEW_QUIC_BRANCH
 #export MAKE_COUNT
