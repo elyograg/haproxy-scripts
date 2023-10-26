@@ -13,7 +13,7 @@ source "${SCRIPT_DIR}/common-functions.sh"
 
 REM_HOST="$1"
 if [ -z "$REM_HOST" ]; then
-  REM_HOST=smeagol.elyograg.org
+  REM_HOST=gollum.elyograg.org
 fi
 
 rsync -avcHP --delete $REM_HOST:/storage0/elyogit/haproxy-scripts/ ./

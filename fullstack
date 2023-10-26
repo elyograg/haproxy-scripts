@@ -17,7 +17,7 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   echo "NOT doing CI"
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
     if [[ "$(hostname)" != *"smeagol"* ]]; then
-      log_warn "Syncing from smeagol.elyograg.org"
+      log_warn "Syncing from elyograg.org primary server."
       checksum_before=$(find . -type f -exec md5sum {} + | grep -v "\.git" | sort | md5sum)
       ./sync_from_creator 2>&1
       checksum_after=$(find . -type f -exec md5sum {} + | grep -v "\.git" | sort | md5sum)
