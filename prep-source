@@ -9,7 +9,8 @@ if [ -f /etc/redhat-release ]; then
   log_info "Trying redhat commands"
   yum -y makecache
   yum -y install \
-    perl-IPC-Cmd perl-Digest-SHA openssl-devel zlib-devel pcre2-devel \
+    perl-IPC-Run perl-IPC-Cmd perl-IPC-System-Simple perl-Digest-SHA \
+    openssl-devel zlib-devel pcre2-devel \
     systemd-devel autoconf automake binutils bison flex \
     gcc gcc-c++ gettext libtool make patch pkgconfig \
     redhat-rpm-config rpm-build rpm-sign byacc cscope ctags \
