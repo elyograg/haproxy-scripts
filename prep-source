@@ -8,7 +8,8 @@ cd "${SCRIPT_DIR}" || die "Can't cd to ${SCRIPT_DIR}!  This is weird."
 if [ -f /etc/redhat-release ]; then
   log_info "Trying redhat commands"
   yum -y makecache
-  yum -y install \
+  yum -y groupinstall "Development Tools" || \
+    yum -y install \
     perl-IPC-Run perl-IPC-Cmd perl-IPC-System-Simple perl-Digest-SHA \
     openssl-devel zlib-devel pcre2-devel \
     systemd-devel autoconf automake binutils bison flex \
