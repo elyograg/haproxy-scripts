@@ -14,8 +14,8 @@ if [ -f /etc/redhat-release ]; then
     systemd-devel autoconf automake binutils bison flex \
     gcc gcc-c++ gettext libtool make patch pkgconfig \
     redhat-rpm-config rpm-build rpm-sign byacc cscope ctags \
-    diffstat doxygen elfutils gcc-gfortran git indent \
-    intltool patchutils rcs subversion swig systemtap python3-psutil \
+    diffstat doxygen elfutils gcc-gfortran git \
+    intltool patchutils subversion swig systemtap python3-psutil \
 
   # blank line above is intentional
 else
