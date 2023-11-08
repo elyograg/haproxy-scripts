@@ -27,7 +27,7 @@ haproxy, write a test string to the webroot, and retrieve that string with
 http3 forced.  The test string includes the git commit hash.  If the pushed
 string and retrieved string don't match, the CI job will fail.
 
-To skip the CI job for a push:
+Note to myself: To skip the CI job for a push:
 
 git push -o ci.skip
 
@@ -47,4 +47,3 @@ work.  Need to learn more before trying that again.
 If the NIC on your machine has multiple IP addresses, you must use specific
 IP addresses in the bind lines.  This is a requirement of the way UDP works,
 it is not a bug.
-

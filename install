@@ -48,6 +48,14 @@ if [ "${RET}" -eq 0 ] && [ ! -f ./force ]; then
 fi
 
 rm ./force -f
+./create-haproxy-service
+
+if [ ! -d git-haproxy-2.8 ] || [ ! -d git-quictls ]; then
+  start_time="$(date -u +%s)"
+  ./prep-source
+  end_time="$(date -u +%s)"
+  prep_elapsed="$(($end_time-$start_time))"
+fi
 
 start_time="$(date -u +%s)"
 ./new-quic git-quictls 2>&1
@@ -61,5 +69,8 @@ haproxy_elapsed="$(($end_time-$start_time))"
 
 echo
 echo "seconds for sync         : ${sync_elapsed}"
+if [ -n "${prep_elapsed}" ]; then
+  echo "seconds for source prep  : ${prep_elapsed}"
+fi
 echo "seconds for quictls build: ${quictls_elapsed}"
 echo "seconds for haproxy build: ${haproxy_elapsed}"

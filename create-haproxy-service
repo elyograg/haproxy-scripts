@@ -4,17 +4,25 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" || exit ; pwd -P)"
 # shellcheck source=./common-functions.sh
 source "${SCRIPT_DIR}/common-functions.sh"
 
-DIR=$(dirname "$0")/"$1"/admin/systemd
-if [ -e "$DIR" ]; then
-  if [ -d "$DIR" ]; then
-    cd "${DIR}" || exit
-    make clean haproxy.service
-    cp haproxy.service /etc/systemd/system/.
-    systemctl daemon-reload
-    systemctl enable haproxy
-  else
-    log_err "location ($DIR) is not a directory."
-  fi
+log_err "Beginning haproxy.service creation"
+
+if [ -e /etc/systemd/system/haproxy.service ] || [ -e /usr/lib/systemd/system/haproxy.service ]; then
+  log_err "haproxy.service already exists, skipping"
 else
-  log_err "location ($DIR) does not exist."
+  DIR=$(dirname "$0")/"$1"/admin/systemd
+  if [ -e "$DIR" ]; then
+    if [ -d "$DIR" ]; then
+      cd "${DIR}" || exit
+      make clean haproxy.service
+      cp haproxy.service /etc/systemd/system/.
+      systemctl daemon-reload
+      systemctl enable haproxy
+    else
+      log_err "location ($DIR) is not a directory."
+    fi
+    log_err "haproxy.service installed and enabled, but not started."
+  else
+    log_err "location ($DIR) does not exist."
+  fi
+  
 fi
