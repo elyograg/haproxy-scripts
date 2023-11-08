@@ -24,7 +24,7 @@ frontend web
 	description One frontend to rule them all
 	bind 0.0.0.0:443 name web443 ssl crt /etc/ssl/certs/local/selfsigned.pem alpn h2,http/1.1 npn h2,http/1.1 allow-0rtt curves secp521r1:secp384r1
 	bind quic4@0.0.0.0:443 name quic443 ssl crt /etc/ssl/certs/local/selfsigned.pem proto quic alpn h3,h3-29,h3-28,h3-27 npn h3,h3-29,h3-28,h3-27 allow-0rtt curves secp521r1:secp384r1
-	http-response add-header alt-svc 'h3=":443"; ma=7200,h3-29=":443"; ma=7200,h3-Q050=":443"; ma=7200,h3-Q046=":443"; ma=7200,h3-Q043=":443"; ma=7200,quic=":443"; ma=7200'
+	http-after-response add-header alt-svc 'h3=":443"; ma=7200'
 	default_backend be-local-81
 	stats enable
 	stats uri /hapeek
