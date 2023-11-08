@@ -43,7 +43,8 @@ log_info "- Sync done or skipped"
 RET="$?"
 
 if [ "${RET}" -eq 0 ] && [ ! -f ./force ]; then
-  log_warn "No updates."
+  log_warn "No updates.  Create a file named 'force'"
+  log_warn "to proceed with the build anyway."
   exit 0
 fi
 
