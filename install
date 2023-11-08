@@ -11,7 +11,7 @@ if [ -n "${RUNNING_IN_DOCKER}" ]; then
 fi
 
 start_time="$(date -u +%s)"
-log_info "Starting fullstack script"
+log_info "Starting install script"
 log_info "CI branch: ${CI_COMMIT_REF_NAME}"
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   echo "NOT doing CI"

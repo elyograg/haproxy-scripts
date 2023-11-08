@@ -12,7 +12,6 @@ build_and_test:
     - env > /tmp/cienv.txt
     - sudo -E mkdir -p /etc/haproxy
     - sudo -E rm -rf /var/www/html/test_file
-    - sudo -E ./prep-source
     - systemctl status docker && DOCKERSVC=true
     - if [ -z "${DOCKERSVC}" ]; then
     -   if [ -f /etc/redhat-release ]; then
@@ -24,11 +23,10 @@ build_and_test:
     -     DEBIAN_FRONTEND=noninteractive sudo -E apt-get install -y docker.io
     -   fi
     - fi
-    - sudo -E ./install-haproxy-service git-haproxy-master
-    - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo -E ./install
     - sudo -E mkdir -p /etc/ssl/certs/local
+    - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
     - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
-    - sudo -E ./fullstack
     - sudo -E ./fixperms
     - sudo -E rm -rf /tmp/test_file
     - TEST_STRING="TEST FILE CONTENTS commit ${CI_COMMIT_SHA}"
