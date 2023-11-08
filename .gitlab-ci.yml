@@ -24,8 +24,9 @@ build_and_test:
     -   fi
     - fi
     - sudo -E ./install
-    - sudo -E mkdir -p /etc/ssl/certs/local
+    - sudo -E mkdir -p /etc/haproxy
     - sudo -E cp ./ci-haproxy-cfg.txt /etc/haproxy/haproxy.cfg
+    - sudo -E mkdir -p /etc/ssl/certs/local
     - sudo -E cp -a selfsigned.pem /etc/ssl/certs/local/.
     - sudo -E ./fixperms
     - sudo -E rm -rf /tmp/test_file
