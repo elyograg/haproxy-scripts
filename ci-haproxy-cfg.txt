@@ -4,21 +4,21 @@ global
 	log 127.0.0.1 len 65535 format rfc5424 local0
 	log 127.0.0.1 len 65535 format rfc5424 local1 notice
 
-
 defaults
 	log global
 	option httplog
 	mode http
 	timeout connect 5s
-	timeout client  15s
-	timeout server  120s
+	timeout client	15s
+	timeout server	120s
 	timeout http-keep-alive 5s
-	timeout check   9990
-
+	timeout check	9990
 
 frontend web80
+	description Redirect to https
 	bind 0.0.0.0:80 name web80
-	default_backend be-local-81
+	redirect scheme https
+	default_backend be_deny
 
 frontend web
 	description One frontend to rule them all
@@ -29,6 +29,12 @@ frontend web
 	stats enable
 	stats uri /hapeek
 	stats refresh 15
+
+backend be_deny
+	description Back end with no servers that denies all requests.
+	no log
+	log 127.0.0.1 len 65535 format rfc5424 local0 notice err
+	http-request deny
 
 backend be-local-81
 	option httpchk
