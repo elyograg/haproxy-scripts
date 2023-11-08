@@ -1,9 +1,9 @@
 #!/bin/bash
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" || { echo "Can't CD to $0 ... this should not happen." ; exit 1 ; } ; pwd -P)"
-if [ -f "${SCRIPT_DIR}/repo_overrides" ]; then
+if [ -f "${SCRIPT_DIR}/overrides" ]; then
   # shellcheck source=/dev/null
-  source "${SCRIPT_DIR}/repo_overrides"
+  source "${SCRIPT_DIR}/overrides"
 fi
 # shellcheck source=/dev/null
 source "${SCRIPT_DIR}/common-functions.sh"
