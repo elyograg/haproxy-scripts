@@ -41,3 +41,10 @@ tinkering.
 
 Building the entire gitlab CI infrastructure in Docker was attempted, didn't
 work.  Need to learn more before trying that again.
+
+# Using 0.0.0.0 with QUIC/HTTP3
+
+If the NIC on your machine has multiple IP addresses, you must use specific
+IP addresses in the bind lines.  This is a requirement of the way UDP works,
+it is not a bug.
+
