@@ -49,8 +49,11 @@ if [ "${RET}" -eq 0 ] && [ ! -f ./force ]; then
   exit 0
 fi
 
+cd "${SCRIPT_DIR}"
+HAPROXY_GIT="$(ls -1trd git-haproxy-* | tail -n1)"
+
 rm ./force -f
-./create-haproxy-service
+./create-haproxy-service "${HAPROXY_GIT}"
 
 if [ ! -d git-haproxy-2.9 ] || [ ! -d git-quictls ]; then
   start_time="$(date -u +%s)"
