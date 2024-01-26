@@ -22,6 +22,7 @@ if [ -z "${CI_COMMIT_REF_NAME}" ]; then
       ./sync_from_creator 2>&1
       checksum_after=$(find . -type f -exec md5sum {} + | grep -v "\.git" | sort | md5sum)
       if [ "$checksum_before" != "$checksum_after" ]; then
+        log_warn "Sync detected changes.  Forcing build."
         touch ./force
       fi
     else
@@ -51,7 +52,7 @@ fi
 rm ./force -f
 ./create-haproxy-service
 
-if [ ! -d git-haproxy-2.8 ] || [ ! -d git-quictls ]; then
+if [ ! -d git-haproxy-2.9 ] || [ ! -d git-quictls ]; then
   start_time="$(date -u +%s)"
   ./prep-source
   end_time="$(date -u +%s)"
@@ -64,7 +65,7 @@ end_time="$(date -u +%s)"
 quictls_elapsed="$(($end_time-$start_time))"
 
 start_time="$(date -u +%s)"
-./new-haproxy git-haproxy-2.8 2>&1
+./new-haproxy git-haproxy-2.9 2>&1
 end_time="$(date -u +%s)"
 haproxy_elapsed="$(($end_time-$start_time))"
 

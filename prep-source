@@ -40,8 +40,8 @@ rm -rf old.git-quictls git-quictls > /dev/null
 echo "Fresh clone of quictls"
 git clone -v https://github.com/quictls/openssl.git git-quictls 2>&1
 echo "Fresh clone of haproxy 2.8 repo"
-git clone -v https://git.haproxy.org/git/haproxy-2.8.git git-haproxy-2.8 2>&1
-rm -rf git-haproxy-2.8 git-haproxy-2.7 git-haproxy-master old.git-haproxy-2.8 old.git-haproxy-2.7 old-git-haproxy-master > /dev/null
+git clone -v https://git.haproxy.org/git/haproxy-2.9.git git-haproxy-2.9 2>&1
+rm -rf git-haproxy-2.8 git-haproxy-2.7 git-haproxy-master old.git-haproxy-2.8 old.git-haproxy-2.7 old.git-haproxy-2.9 old-git-haproxy-master > /dev/null
 # force the build to happen the first time
 touch force
 true
