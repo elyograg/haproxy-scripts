@@ -13,6 +13,10 @@ fi
 start_time="$(date -u +%s)"
 log_info "Starting install script"
 log_info "CI branch: ${CI_COMMIT_REF_NAME}"
+
+./check_for_updates git-*
+CHECK_RET="$?"
+
 if [ -z "${CI_COMMIT_REF_NAME}" ]; then
   echo "NOT doing CI"
   if [[ "$(hostname -f)" == *"elyograg"* ]]; then
@@ -40,10 +44,7 @@ end_time="$(date -u +%s)"
 sync_elapsed="$(($end_time-$start_time))"
 log_info "- Sync done or skipped"
 
-./check_for_updates git-*
-RET="$?"
-
-if [ "${RET}" -eq 0 ] && [ ! -f ./force ]; then
+if [ "${CHECK_RET}" -eq 0 ] && [ ! -f ./force ]; then
   log_warn "No updates.  Create a file named 'force'"
   log_warn "to proceed with the build anyway."
   exit 0
