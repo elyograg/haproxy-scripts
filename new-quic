@@ -45,11 +45,11 @@ if [ -e "${QUICTLS_SRC_DIR}" ]; then
     fetch_from_git "quictls"
     if [ -z "${NEW_QUIC_BRANCH}" ]; then
       # Use default branch.
-      #git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
+      git checkout "$(git remote show origin | grep 'HEAD branch' | cut -d' ' -f5)"
       # Use latest 1.xi +quic branch:
       #NEW_QUIC_BRANCH="$(git remote show origin | grep -Ew "^\s+OpenSSL_1.*quic" | sort -V | tail -n1 | awk '{print $1}')"
       # Use latest 3.x +quic branch:
-      NEW_QUIC_BRANCH="$(git remote show origin | grep -Ew "^\s+openssl-3.*quic.*" | sort -V | tail -n1 | awk '{print $1}')"
+      #NEW_QUIC_BRANCH="$(git remote show origin | grep -Ew "^\s+openssl-3.*quic.*" | sort -V | tail -n1 | awk '{print $1}')"
     fi
     log_info "Changing branch to '${NEW_QUIC_BRANCH}'"
     git checkout "${NEW_QUIC_BRANCH}" 2>&1
