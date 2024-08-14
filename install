@@ -56,7 +56,7 @@ HAPROXY_GIT="$(ls -1trd git-haproxy-* | tail -n1)"
 rm ./force -f
 ./create-haproxy-service "${HAPROXY_GIT}"
 
-if [ ! -d git-haproxy-2.9 ] || [ ! -d git-quictls ]; then
+if [ ! -d git-haproxy-3.0 ] || [ ! -d git-quictls ]; then
   start_time="$(date -u +%s)"
   ./prep-source
   end_time="$(date -u +%s)"
@@ -69,7 +69,7 @@ end_time="$(date -u +%s)"
 quictls_elapsed="$(($end_time-$start_time))"
 
 start_time="$(date -u +%s)"
-./new-haproxy git-haproxy-2.9 2>&1
+./new-haproxy git-haproxy-3.0 2>&1
 end_time="$(date -u +%s)"
 haproxy_elapsed="$(($end_time-$start_time))"
 
